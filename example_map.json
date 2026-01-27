@@ -1,0 +1,269 @@
+{
+  "nodes": [
+    {
+      "balance": 0,
+      "icon": "🏦",
+      "id": "default-checking-account",
+      "name": "Checking account",
+      "position": {
+        "x": 530,
+        "y": 300
+      },
+      "subtype": "CHECKING",
+      "type": "DEPOSITORY_ACCOUNT"
+    },
+    {
+      "balance": 0,
+      "icon": "💰",
+      "id": "default-taxes-pod",
+      "name": "Taxes Pod",
+      "position": {
+        "x": 1000,
+        "y": 300
+      },
+      "subtype": null,
+      "type": "POD"
+    },
+    {
+      "balance": 21000,
+      "icon": "💰",
+      "id": "5885a48a-467d-4534-80c5-57cb04d72aa8",
+      "name": "example",
+      "position": {
+        "x": 660,
+        "y": 580
+      },
+      "subtype": null,
+      "type": "POD"
+    },
+    {
+      "balance": 17000,
+      "icon": "💰",
+      "id": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+      "name": "example 2",
+      "position": {
+        "x": 1100,
+        "y": 580
+      },
+      "subtype": null,
+      "type": "POD"
+    },
+    {
+      "balance": 44000,
+      "icon": "💰",
+      "id": "37278fdd-4af7-4366-8818-95e232bcd56f",
+      "name": "example 3",
+      "position": {
+        "x": 420,
+        "y": 580
+      },
+      "subtype": null,
+      "type": "POD"
+    },
+    {
+      "balance": 30000,
+      "icon": "💳",
+      "id": "e9b59fa6-f3eb-43a7-b195-a4e30958720b",
+      "name": "Credit Card",
+      "position": {
+        "x": 200,
+        "y": 700
+      },
+      "subtype": "CREDIT_CARD",
+      "type": "LIABILITY_ACCOUNT"
+    },
+    {
+      "balance": 71000,
+      "icon": "💳",
+      "id": "c81a4a05-c77f-4ee0-972a-b53e7f68f742",
+      "name": "Credit Card 2",
+      "position": {
+        "x": 260,
+        "y": 880
+      },
+      "subtype": "CREDIT_CARD",
+      "type": "LIABILITY_ACCOUNT"
+    },
+    {
+      "balance": 6000,
+      "icon": "💳",
+      "id": "4a44ae2c-b164-4886-a46b-9512c9247bcf",
+      "name": "Credit Card 3",
+      "position": {
+        "x": 520,
+        "y": 840
+      },
+      "subtype": "CREDIT_CARD",
+      "type": "LIABILITY_ACCOUNT"
+    }
+  ],
+  "rules": [
+    {
+      "id": "bc849608-19a5-4b85-bdae-628fe6cd4481",
+      "sourceId": "default-taxes-pod",
+      "steps": [
+        {
+          "actions": [
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "destinationId": "default-checking-account",
+              "groupIndex": 0,
+              "limit": null,
+              "sourceId": "default-taxes-pod",
+              "type": "PERCENTAGE",
+              "upToEnabled": null
+            },
+            {
+              "amountInCents": 10000,
+              "amountInPercentage": 0,
+              "destinationId": "5885a48a-467d-4534-80c5-57cb04d72aa8",
+              "groupIndex": 1,
+              "limit": null,
+              "sourceId": "default-taxes-pod",
+              "type": "FIXED",
+              "upToEnabled": null
+            },
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "destinationId": "5885a48a-467d-4534-80c5-57cb04d72aa8",
+              "groupIndex": 2,
+              "limit": null,
+              "sourceId": "default-taxes-pod",
+              "type": "TOP_UP",
+              "upToEnabled": null
+            }
+          ]
+        }
+      ],
+      "trigger": {
+        "cron": null,
+        "sourceId": "default-taxes-pod",
+        "type": "INCOMING_FUNDS"
+      }
+    },
+    {
+      "id": "cf44387f-0c64-4a8f-9bea-7e9b522a469e",
+      "sourceId": "default-checking-account",
+      "steps": [
+        {
+          "actions": [
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "destinationId": "37278fdd-4af7-4366-8818-95e232bcd56f",
+              "groupIndex": 0,
+              "sourceId": "default-checking-account",
+              "type": "ROUND_DOWN"
+            }
+          ]
+        }
+      ],
+      "trigger": {
+        "cron": "0 0 1 * *",
+        "sourceId": "default-checking-account",
+        "type": "SCHEDULED"
+      }
+    },
+    {
+      "id": "eee0dd15-1a6a-43fa-b823-870bdb9128a1",
+      "sourceId": "default-taxes-pod",
+      "steps": [
+        {
+          "actions": [
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "destinationId": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+              "groupIndex": 0,
+              "sourceId": "default-taxes-pod",
+              "type": "TOP_UP"
+            }
+          ]
+        }
+      ],
+      "trigger": {
+        "cron": "0 0 * * TUE",
+        "sourceId": "default-taxes-pod",
+        "type": "SCHEDULED"
+      }
+    },
+    {
+      "id": "f04f8ea5-4e04-4498-b20f-4f57586ad80f",
+      "sourceId": "37278fdd-4af7-4366-8818-95e232bcd56f",
+      "steps": [
+        {
+          "actions": [
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "destinationId": "e9b59fa6-f3eb-43a7-b195-a4e30958720b",
+              "groupIndex": 0,
+              "sourceId": "37278fdd-4af7-4366-8818-95e232bcd56f",
+              "type": "NEXT_PAYMENT_MINIMUM",
+              "upToEnabled": true
+            },
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "destinationId": "c81a4a05-c77f-4ee0-972a-b53e7f68f742",
+              "groupIndex": 1,
+              "sourceId": "37278fdd-4af7-4366-8818-95e232bcd56f",
+              "type": "TOTAL_AMOUNT_DUE"
+            }
+          ]
+        }
+      ],
+      "trigger": {
+        "cron": null,
+        "sourceId": "37278fdd-4af7-4366-8818-95e232bcd56f",
+        "type": "INCOMING_FUNDS"
+      }
+    },
+    {
+      "id": "ff2cbf39-bb5d-47f6-a685-d721d4bf9885",
+      "sourceId": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+      "steps": [
+        {
+          "actions": [
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "destinationId": "c81a4a05-c77f-4ee0-972a-b53e7f68f742",
+              "groupIndex": 0,
+              "sourceId": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+              "type": "AVALANCHE"
+            },
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "destinationId": "4a44ae2c-b164-4886-a46b-9512c9247bcf",
+              "groupIndex": 0,
+              "sourceId": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+              "type": "AVALANCHE"
+            },
+            {
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "destinationId": "e9b59fa6-f3eb-43a7-b195-a4e30958720b",
+              "groupIndex": 0,
+              "sourceId": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+              "type": "AVALANCHE"
+            }
+          ]
+        }
+      ],
+      "trigger": {
+        "cron": null,
+        "sourceId": "cb4783e3-1ddd-438e-92b4-af2f366e1599",
+        "type": "INCOMING_FUNDS"
+      }
+    }
+  ],
+  "viewport": {
+    "x": 321.5,
+    "y": -198.4000000000001,
+    "zoom": 0.9
+  }
+}

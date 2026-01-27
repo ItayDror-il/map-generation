@@ -1,0 +1,163 @@
+{
+  "nodes": [
+    {
+      "id": "e6b611e5-a283-419c-b3d1-6bcf15ed3992",
+      "type": "PORT",
+      "subtype": null,
+      "name": "Revenue",
+      "balance": 0,
+      "icon": "\ud83d\udce5",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+      "type": "DEPOSITORY_ACCOUNT",
+      "subtype": "CHECKING",
+      "name": "Operating Account",
+      "balance": 0,
+      "icon": "\ud83c\udfe6",
+      "position": {
+        "x": 950,
+        "y": 200
+      }
+    },
+    {
+      "id": "ee6bb665-74ee-43be-a405-e7756c642ef4",
+      "type": "POD",
+      "subtype": null,
+      "name": "Profit",
+      "balance": 0,
+      "icon": "\ud83d\udcc8",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "77f88209-7c15-426d-b653-38fea233bbef",
+      "type": "POD",
+      "subtype": null,
+      "name": "Owner Pay",
+      "balance": 0,
+      "icon": "\ud83d\udc64",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "f005162d-fb27-46c8-b42f-aa5f5573b847",
+      "type": "POD",
+      "subtype": null,
+      "name": "Tax Reserve",
+      "balance": 0,
+      "icon": "\ud83c\udfdb\ufe0f",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "8e7ec41e-2dce-4883-a2e2-6fc1243aa943",
+      "type": "POD",
+      "subtype": null,
+      "name": "Operating Expenses",
+      "balance": 0,
+      "icon": "\u2699\ufe0f",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "c3cdc008-6b71-4462-a436-fcfe7e8e442d",
+      "sourceId": "e6b611e5-a283-419c-b3d1-6bcf15ed3992",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "e6b611e5-a283-419c-b3d1-6bcf15ed3992",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "e6b611e5-a283-419c-b3d1-6bcf15ed3992",
+              "destinationId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "d33c742f-b8f0-4347-8c20-7c12c54ad382",
+      "sourceId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+              "destinationId": "ee6bb665-74ee-43be-a405-e7756c642ef4",
+              "amountInCents": 0,
+              "amountInPercentage": 5,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+              "destinationId": "77f88209-7c15-426d-b653-38fea233bbef",
+              "amountInCents": 0,
+              "amountInPercentage": 50,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+              "destinationId": "f005162d-fb27-46c8-b42f-aa5f5573b847",
+              "amountInCents": 0,
+              "amountInPercentage": 15,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "REMAINDER",
+              "sourceId": "000c3c7f-9b46-4f08-8e16-f02f4e936cc8",
+              "destinationId": "8e7ec41e-2dce-4883-a2e2-6fc1243aa943",
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "groupIndex": 1,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "viewport": {
+    "x": 321.5,
+    "y": -198.4,
+    "zoom": 0.9
+  }
+}

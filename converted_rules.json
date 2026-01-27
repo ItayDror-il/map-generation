@@ -1,0 +1,1550 @@
+{
+  "id": "rules-human-readable copy",
+  "name": "Parsed from rules-human-readable copy",
+  "nodes": [
+    {
+      "id": "node_001",
+      "type": "POD",
+      "name": "P - Sweep - OPEX",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Sweep - OPEX"
+      }
+    },
+    {
+      "id": "node_002",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - Sweep - Debt",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Sweep - Debt"
+      }
+    },
+    {
+      "id": "node_003",
+      "type": "POD",
+      "name": "P - Sweep - Utilities",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Sweep - Utilities"
+      }
+    },
+    {
+      "id": "node_004",
+      "type": "POD",
+      "name": "P - Nelnet Buffer",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Nelnet Buffer"
+      }
+    },
+    {
+      "id": "node_005",
+      "type": "POD",
+      "name": "LH - Quickbooks Online",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Quickbooks Online"
+      }
+    },
+    {
+      "id": "node_006",
+      "type": "POD",
+      "name": "LH - Misc",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Misc"
+      }
+    },
+    {
+      "id": "node_007",
+      "type": "POD",
+      "name": "LH - Trash",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Trash"
+      }
+    },
+    {
+      "id": "node_008",
+      "type": "POD",
+      "name": "LH - Website",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Website"
+      }
+    },
+    {
+      "id": "node_009",
+      "type": "PORT",
+      "name": "LH - Income - Deposit",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Income - Deposit"
+      }
+    },
+    {
+      "id": "node_010",
+      "type": "POD",
+      "name": "LH - Sweep - OPEX",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Sweep - OPEX"
+      }
+    },
+    {
+      "id": "node_011",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "LH - SBA Loan",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - SBA Loan"
+      }
+    },
+    {
+      "id": "node_012",
+      "type": "POD",
+      "name": "LH - Rent",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Rent"
+      }
+    },
+    {
+      "id": "node_013",
+      "type": "DEPOSITORY_ACCOUNT",
+      "name": "LH - PAYROLL",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - PAYROLL (depository)"
+      }
+    },
+    {
+      "id": "node_014",
+      "type": "DEPOSITORY_ACCOUNT",
+      "name": "LH - TAX",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - TAX (depository)"
+      }
+    },
+    {
+      "id": "node_015",
+      "type": "DEPOSITORY_ACCOUNT",
+      "name": "LH - Chase - COGS",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Chase - COGS (depository)"
+      }
+    },
+    {
+      "id": "node_016",
+      "type": "POD",
+      "name": "LH - Rent Base",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Rent Base"
+      }
+    },
+    {
+      "id": "node_017",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - Sweep - Auto Debt",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Sweep - Auto Debt"
+      }
+    },
+    {
+      "id": "node_018",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - Sweep - CC Debt",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Sweep - CC Debt"
+      }
+    },
+    {
+      "id": "node_019",
+      "type": "POD",
+      "name": "P - Kubota",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Kubota"
+      }
+    },
+    {
+      "id": "node_020",
+      "type": "POD",
+      "name": "P - Sweep - PL Paydown",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Sweep - PL Paydown"
+      }
+    },
+    {
+      "id": "node_021",
+      "type": "POD",
+      "name": "P - Prosper PL",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Prosper PL"
+      }
+    },
+    {
+      "id": "node_022",
+      "type": "POD",
+      "name": "P - FirstTechFederal",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - FirstTechFederal"
+      }
+    },
+    {
+      "id": "node_023",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - CC - Freedom - 9801",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - CC - Freedom - 9801 (liability)"
+      }
+    },
+    {
+      "id": "node_024",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - CC - BofA - 0731",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - CC - BofA - 0731 (liability)"
+      }
+    },
+    {
+      "id": "node_025",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - CC - BofA - 5851",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - CC - BofA - 5851 (liability)"
+      }
+    },
+    {
+      "id": "node_026",
+      "type": "LIABILITY_ACCOUNT",
+      "name": "P - CC - COMENITY - 2740",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - CC - COMENITY - 2740 (liability)"
+      }
+    },
+    {
+      "id": "node_027",
+      "type": "POD",
+      "name": "LH - Gas",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Gas"
+      }
+    },
+    {
+      "id": "node_028",
+      "type": "POD",
+      "name": "LH - Trimark",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Trimark"
+      }
+    },
+    {
+      "id": "node_029",
+      "type": "POD",
+      "name": "LH - Water",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Water"
+      }
+    },
+    {
+      "id": "node_030",
+      "type": "POD",
+      "name": "LH - Maintenance Buffer",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Maintenance Buffer"
+      }
+    },
+    {
+      "id": "node_031",
+      "type": "POD",
+      "name": "LH - Electric",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Electric"
+      }
+    },
+    {
+      "id": "node_032",
+      "type": "POD",
+      "name": "LH - Cable",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Cable"
+      }
+    },
+    {
+      "id": "node_033",
+      "type": "POD",
+      "name": "LH - Internet",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Internet"
+      }
+    },
+    {
+      "id": "node_034",
+      "type": "POD",
+      "name": "LH - Bevinco",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Bevinco"
+      }
+    },
+    {
+      "id": "node_035",
+      "type": "POD",
+      "name": "LH - TABC",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - TABC"
+      }
+    },
+    {
+      "id": "node_036",
+      "type": "POD",
+      "name": "LH - 7Shifts",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - 7Shifts"
+      }
+    },
+    {
+      "id": "node_037",
+      "type": "POD",
+      "name": "LH - NuCo2",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - NuCo2"
+      }
+    },
+    {
+      "id": "node_038",
+      "type": "POD",
+      "name": "LH - Bathroom Cleaning",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Bathroom Cleaning"
+      }
+    },
+    {
+      "id": "node_039",
+      "type": "POD",
+      "name": "LH - Phones",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Phones"
+      }
+    },
+    {
+      "id": "node_040",
+      "type": "POD",
+      "name": "LH - Google",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Google"
+      }
+    },
+    {
+      "id": "node_041",
+      "type": "POD",
+      "name": "LH - BMI",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - BMI"
+      }
+    },
+    {
+      "id": "node_042",
+      "type": "POD",
+      "name": "Music Bingo",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "Music Bingo"
+      }
+    },
+    {
+      "id": "node_043",
+      "type": "POD",
+      "name": "LH - Ink Card",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Ink Card"
+      }
+    },
+    {
+      "id": "node_044",
+      "type": "POD",
+      "name": "LH - Ink Card 2",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Ink Card 2"
+      }
+    },
+    {
+      "id": "node_045",
+      "type": "POD",
+      "name": "LH - Sweep - Insurance",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Sweep - Insurance"
+      }
+    },
+    {
+      "id": "node_046",
+      "type": "POD",
+      "name": "P - Ferrell Gas",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Ferrell Gas"
+      }
+    },
+    {
+      "id": "node_047",
+      "type": "POD",
+      "name": "P - Rent - Tricon",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Rent - Tricon"
+      }
+    },
+    {
+      "id": "node_048",
+      "type": "POD",
+      "name": "P - Garmin",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Garmin"
+      }
+    },
+    {
+      "id": "node_049",
+      "type": "POD",
+      "name": "P - Pandora",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Pandora"
+      }
+    },
+    {
+      "id": "node_050",
+      "type": "POD",
+      "name": "DTNS - Sweep",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Sweep"
+      }
+    },
+    {
+      "id": "node_051",
+      "type": "POD",
+      "name": "DTNS - GSUITE",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - GSUITE"
+      }
+    },
+    {
+      "id": "node_052",
+      "type": "POD",
+      "name": "DTNS - AWS",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - AWS"
+      }
+    },
+    {
+      "id": "node_053",
+      "type": "POD",
+      "name": "DTNS - OpenAI",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - OpenAI"
+      }
+    },
+    {
+      "id": "node_054",
+      "type": "POD",
+      "name": "DTNS - Codeium",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Codeium"
+      }
+    },
+    {
+      "id": "node_055",
+      "type": "POD",
+      "name": "DTNS - Monday.com",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Monday.com"
+      }
+    },
+    {
+      "id": "node_056",
+      "type": "POD",
+      "name": "DTNS - Misc",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Misc"
+      }
+    },
+    {
+      "id": "node_057",
+      "type": "POD",
+      "name": "DTNS - Zoom",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Zoom"
+      }
+    },
+    {
+      "id": "node_058",
+      "type": "POD",
+      "name": "DTNS - CalendarBridge",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - CalendarBridge"
+      }
+    },
+    {
+      "id": "node_059",
+      "type": "POD",
+      "name": "DTNS - Liveplan",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Liveplan"
+      }
+    },
+    {
+      "id": "node_060",
+      "type": "POD",
+      "name": "DTNS - Dropbox",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Dropbox"
+      }
+    },
+    {
+      "id": "node_061",
+      "type": "POD",
+      "name": "DTNS - Starlink",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Starlink"
+      }
+    },
+    {
+      "id": "node_062",
+      "type": "POD",
+      "name": "DTNS - LinkedIN",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - LinkedIN"
+      }
+    },
+    {
+      "id": "node_063",
+      "type": "POD",
+      "name": "DTNS - Nextlink",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Nextlink"
+      }
+    },
+    {
+      "id": "node_064",
+      "type": "POD",
+      "name": "DTNS - Lucidchart",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Lucidchart"
+      }
+    },
+    {
+      "id": "node_065",
+      "type": "POD",
+      "name": "DTNS - Calendly",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Calendly"
+      }
+    },
+    {
+      "id": "node_066",
+      "type": "POD",
+      "name": "DTNS - Squarespace",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "DTNS - Squarespace"
+      }
+    },
+    {
+      "id": "node_067",
+      "type": "POD",
+      "name": "LH - Auto - Progressive",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Auto - Progressive"
+      }
+    },
+    {
+      "id": "node_068",
+      "type": "POD",
+      "name": "LH - Life - Ethos",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Life - Ethos"
+      }
+    },
+    {
+      "id": "node_069",
+      "type": "POD",
+      "name": "LH - Biz Liability",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Biz Liability"
+      }
+    },
+    {
+      "id": "node_070",
+      "type": "POD",
+      "name": "LH - Health",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Health"
+      }
+    },
+    {
+      "id": "node_071",
+      "type": "PORT",
+      "name": "P - W2 - Personal Income - Primary",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - W2 - Personal Income - Primary"
+      }
+    },
+    {
+      "id": "node_072",
+      "type": "DEPOSITORY_ACCOUNT",
+      "name": "P - Primary",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Primary (depository)"
+      }
+    },
+    {
+      "id": "node_073",
+      "type": "DEPOSITORY_ACCOUNT",
+      "name": "P - Adv Plus Banking",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "P - Adv Plus Banking (depository)"
+      }
+    },
+    {
+      "id": "node_074",
+      "type": "POD",
+      "name": "LH - Ads and Promotion",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Ads and Promotion"
+      }
+    },
+    {
+      "id": "node_075",
+      "type": "POD",
+      "name": "LH - Community Coffee",
+      "target_amount": null,
+      "metadata": {
+        "original_name": "LH - Community Coffee"
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule_001",
+      "name": "Allocations from P - Sweep - OPEX",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_001",
+      "actions": [
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_002",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_003",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_004",
+          "value": null,
+          "priority": 2,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_002",
+      "name": "Allocations from LH - Quickbooks Online",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_005",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 400.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 400.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_003",
+      "name": "Allocations from LH - Trash",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_007",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 1700.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 1700.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_004",
+      "name": "Allocations from LH - Website",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_008",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 200.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 200.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_005",
+      "name": "Allocations from LH - Income - Deposit",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_009",
+      "actions": [
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_010",
+          "value": 8.5,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_011",
+          "value": 10.0,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_012",
+          "value": 3.0,
+          "priority": 2,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_013",
+          "value": 30.0,
+          "priority": 3,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_014",
+          "value": 13.5,
+          "priority": 4,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_015",
+          "value": 32.0,
+          "priority": 5,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_016",
+          "value": 3.0,
+          "priority": 6,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_006",
+      "name": "Allocations from P - Sweep - Debt",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_002",
+      "actions": [
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_017",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_018",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_007",
+      "name": "Allocations from P - Sweep - Auto Debt",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_017",
+      "actions": [
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_019",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_008",
+      "name": "Allocations from P - Sweep - PL Paydown",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_020",
+      "actions": [
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_021",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_022",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_009",
+      "name": "Allocations from P - Sweep - CC Debt",
+      "trigger": "SCHEDULED",
+      "source_id": "node_018",
+      "actions": [
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_023",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_024",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_025",
+          "value": null,
+          "priority": 2,
+          "metadata": {}
+        },
+        {
+          "type": "SNOWBALL",
+          "destination_id": "node_026",
+          "value": null,
+          "priority": 3,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_010",
+      "name": "Allocations from LH - Sweep - OPEX",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_010",
+      "actions": [
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_027",
+          "value": 9.5,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_028",
+          "value": 5.5,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_029",
+          "value": 8.0,
+          "priority": 2,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_030",
+          "value": 5.5,
+          "priority": 3,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_031",
+          "value": 8.0,
+          "priority": 4,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_032",
+          "value": 10.5,
+          "priority": 5,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_008",
+          "value": 1.5,
+          "priority": 6,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_033",
+          "value": 2.5,
+          "priority": 7,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_034",
+          "value": 2.5,
+          "priority": 8,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_007",
+          "value": 4.5,
+          "priority": 9,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_035",
+          "value": 1.5,
+          "priority": 10,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_036",
+          "value": 1.5,
+          "priority": 11,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_037",
+          "value": 3.0,
+          "priority": 12,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_038",
+          "value": 3.5,
+          "priority": 13,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_039",
+          "value": 2.0,
+          "priority": 14,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_040",
+          "value": 1.5,
+          "priority": 15,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_041",
+          "value": 2.5,
+          "priority": 16,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_042",
+          "value": 2.5,
+          "priority": 17,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_043",
+          "value": 3.0,
+          "priority": 18,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_044",
+          "value": 7.0,
+          "priority": 19,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_045",
+          "value": 14.0,
+          "priority": 20,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_011",
+      "name": "Allocations from P - Sweep - Utilities",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_003",
+      "actions": [
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_046",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_047",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_048",
+          "value": null,
+          "priority": 2,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_049",
+          "value": null,
+          "priority": 3,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_012",
+      "name": "Allocations from DTNS - Sweep",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_050",
+      "actions": [
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_051",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_052",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_053",
+          "value": null,
+          "priority": 2,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_054",
+          "value": null,
+          "priority": 3,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_055",
+          "value": null,
+          "priority": 4,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_056",
+          "value": null,
+          "priority": 5,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_057",
+          "value": null,
+          "priority": 6,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_058",
+          "value": null,
+          "priority": 7,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_059",
+          "value": null,
+          "priority": 8,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_060",
+          "value": null,
+          "priority": 9,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_061",
+          "value": null,
+          "priority": 10,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_062",
+          "value": null,
+          "priority": 11,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_063",
+          "value": null,
+          "priority": 12,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_064",
+          "value": null,
+          "priority": 13,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_065",
+          "value": null,
+          "priority": 14,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_013",
+      "name": "Allocations from DTNS - OpenAI",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_053",
+      "actions": [
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_066",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_014",
+      "name": "Allocations from LH - Sweep - Insurance",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_045",
+      "actions": [
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_067",
+          "value": null,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_068",
+          "value": null,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_069",
+          "value": null,
+          "priority": 2,
+          "metadata": {}
+        },
+        {
+          "type": "REMAINDER",
+          "destination_id": "node_070",
+          "value": null,
+          "priority": 3,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_015",
+      "name": "Allocations from P - W2 - Personal Income - Primary",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_071",
+      "actions": [
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_072",
+          "value": 25.0,
+          "priority": 0,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_073",
+          "value": 10.0,
+          "priority": 1,
+          "metadata": {}
+        },
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_001",
+          "value": 65.0,
+          "priority": 2,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_016",
+      "name": "Allocations from LH - Ads and Promotion",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_074",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 700.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 700.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_017",
+      "name": "Allocations from LH - 7Shifts",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_036",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 300.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 300.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_018",
+      "name": "Allocations from LH - Bevinco",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_034",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 1700.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 1700.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_019",
+      "name": "Allocations from LH - Electric",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_031",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 4000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 4000.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_020",
+      "name": "Allocations from LH - Cable",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_032",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 6000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 6000.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_021",
+      "name": "Allocations from LH - TABC",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_035",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 6500.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 6500.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_022",
+      "name": "Allocations from LH - Internet",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_033",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 500.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 500.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_023",
+      "name": "Allocations from LH - Water",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_029",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 4000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 4000.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_024",
+      "name": "Allocations from LH - Trimark",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_028",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 3000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 3000.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_025",
+      "name": "Allocations from LH - Maintenance Buffer",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_030",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 4000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 4000.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_026",
+      "name": "Allocations from LH - Community Coffee",
+      "trigger": "SCHEDULED",
+      "source_id": "node_075",
+      "actions": [
+        {
+          "type": "PERCENTAGE",
+          "destination_id": "node_015",
+          "value": 100.0,
+          "priority": 0,
+          "metadata": {}
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_027",
+      "name": "Allocations from LH - Phones",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_039",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 1000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 1000.0
+          }
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rule_028",
+      "name": "Allocations from Music Bingo",
+      "trigger": "INCOMING_FUNDS",
+      "source_id": "node_042",
+      "actions": [
+        {
+          "type": "TOP_UP",
+          "destination_id": "node_006",
+          "value": 1000.0,
+          "priority": 0,
+          "metadata": {
+            "overflow_threshold": 1000.0
+          }
+        }
+      ],
+      "enabled": true
+    }
+  ],
+  "metadata": {
+    "source": "markdown",
+    "format": "human-readable-rules"
+  }
+}

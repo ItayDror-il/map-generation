@@ -1,0 +1,141 @@
+{
+  "nodes": [
+    {
+      "id": "cec16b4b-36b7-4cf5-97ec-ce30e12eecd6",
+      "type": "PORT",
+      "subtype": null,
+      "name": "Income",
+      "balance": 0,
+      "icon": "\ud83d\udce5",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "44c4faee-0031-47c2-8c1e-e35096491360",
+      "type": "POD",
+      "subtype": null,
+      "name": "Router",
+      "balance": 0,
+      "icon": "\ud83d\udd00",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "a1b8cddf-796b-407d-9ac0-d97afa34b7e5",
+      "type": "POD",
+      "subtype": null,
+      "name": "Needs",
+      "balance": 0,
+      "icon": "\ud83c\udfe0",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "e8d31045-2584-4ec4-8b6c-c9fe03ade422",
+      "type": "POD",
+      "subtype": null,
+      "name": "Wants",
+      "balance": 0,
+      "icon": "\ud83c\udf89",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "cc00aa85-8180-4188-9a98-d0673456bba0",
+      "type": "POD",
+      "subtype": null,
+      "name": "Savings",
+      "balance": 0,
+      "icon": "\ud83d\udcb0",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "68dfeb27-74e6-42f0-915f-77526babc28c",
+      "sourceId": "cec16b4b-36b7-4cf5-97ec-ce30e12eecd6",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "cec16b4b-36b7-4cf5-97ec-ce30e12eecd6",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "cec16b4b-36b7-4cf5-97ec-ce30e12eecd6",
+              "destinationId": "44c4faee-0031-47c2-8c1e-e35096491360",
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "9f21c37c-5cad-4d6a-988e-97710e1b8baa",
+      "sourceId": "44c4faee-0031-47c2-8c1e-e35096491360",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "44c4faee-0031-47c2-8c1e-e35096491360",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "44c4faee-0031-47c2-8c1e-e35096491360",
+              "destinationId": "a1b8cddf-796b-407d-9ac0-d97afa34b7e5",
+              "amountInCents": 0,
+              "amountInPercentage": 50,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "44c4faee-0031-47c2-8c1e-e35096491360",
+              "destinationId": "e8d31045-2584-4ec4-8b6c-c9fe03ade422",
+              "amountInCents": 0,
+              "amountInPercentage": 30,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "44c4faee-0031-47c2-8c1e-e35096491360",
+              "destinationId": "cc00aa85-8180-4188-9a98-d0673456bba0",
+              "amountInCents": 0,
+              "amountInPercentage": 20,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "viewport": {
+    "x": 321.5,
+    "y": -198.4,
+    "zoom": 0.9
+  }
+}

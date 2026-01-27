@@ -1,0 +1,97 @@
+{
+  "nodes": [
+    {
+      "id": "56d17c20-2d2d-4b57-9124-b373d3b9e0f2",
+      "type": "LIABILITY_ACCOUNT",
+      "subtype": "CREDIT_CARD",
+      "name": "Chase",
+      "balance": 0,
+      "icon": "\ud83d\udcb3",
+      "position": {
+        "x": 200,
+        "y": 1100
+      }
+    },
+    {
+      "id": "7a8de963-67a8-43aa-88b4-b73dfa671593",
+      "type": "DEPOSITORY_ACCOUNT",
+      "subtype": "CHECKING",
+      "name": "TOTAL CHECKING",
+      "balance": 0,
+      "icon": "\ud83c\udfe6",
+      "position": {
+        "x": 1200,
+        "y": 200
+      }
+    },
+    {
+      "id": "f9e3cd0c-abfe-44d5-8f01-5b5d25594868",
+      "type": "PORT",
+      "subtype": null,
+      "name": "Salary",
+      "balance": 0,
+      "icon": "\ud83d\udce5",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "76fb8b8f-046b-4186-af42-4d83a32233b5",
+      "sourceId": "56d17c20-2d2d-4b57-9124-b373d3b9e0f2",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "56d17c20-2d2d-4b57-9124-b373d3b9e0f2",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "FIXED",
+              "sourceId": "56d17c20-2d2d-4b57-9124-b373d3b9e0f2",
+              "destinationId": "7a8de963-67a8-43aa-88b4-b73dfa671593",
+              "amountInCents": 30000,
+              "amountInPercentage": 0,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4a55a0b1-72b3-42e1-8b71-ed970be47d99",
+      "sourceId": "f9e3cd0c-abfe-44d5-8f01-5b5d25594868",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "f9e3cd0c-abfe-44d5-8f01-5b5d25594868",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "FIXED",
+              "sourceId": "f9e3cd0c-abfe-44d5-8f01-5b5d25594868",
+              "destinationId": "7a8de963-67a8-43aa-88b4-b73dfa671593",
+              "amountInCents": 70000,
+              "amountInPercentage": 0,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "viewport": {
+    "x": 321.5,
+    "y": -198.4,
+    "zoom": 0.9
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "nodes": [
+    {
+      "id": "a0199d98-79c3-44f2-ba50-218a1c51e8cf",
+      "type": "PORT",
+      "subtype": null,
+      "name": "Income",
+      "balance": 0,
+      "icon": "\ud83d\udce5",
+      "position": {
+        "x": 200,
+        "y": 200
+      }
+    },
+    {
+      "id": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+      "type": "POD",
+      "subtype": null,
+      "name": "Router",
+      "balance": 0,
+      "icon": "\ud83d\udd00",
+      "position": {
+        "x": 450,
+        "y": 200
+      }
+    },
+    {
+      "id": "bdaa504d-7dc1-4efc-9dc3-314c3173a362",
+      "type": "POD",
+      "subtype": null,
+      "name": "Bills & Essentials",
+      "balance": 0,
+      "icon": "\ud83d\udccb",
+      "position": {
+        "x": 450,
+        "y": 350
+      }
+    },
+    {
+      "id": "f27bd379-a009-43ef-9260-e2d4bfada6bc",
+      "type": "POD",
+      "subtype": null,
+      "name": "Debt Payment",
+      "balance": 0,
+      "icon": "\ud83d\udcb3",
+      "position": {
+        "x": 450,
+        "y": 500
+      }
+    },
+    {
+      "id": "796674cd-ea64-4552-8baf-ec3d70469b96",
+      "type": "POD",
+      "subtype": null,
+      "name": "Emergency Fund",
+      "balance": 0,
+      "icon": "\ud83d\udee1\ufe0f",
+      "position": {
+        "x": 450,
+        "y": 650
+      }
+    },
+    {
+      "id": "4eb5d198-22bb-45e2-8c63-986d4d661b61",
+      "type": "LIABILITY_ACCOUNT",
+      "subtype": "CREDIT_CARD",
+      "name": "Chase",
+      "balance": 0,
+      "icon": "\ud83d\udcb3",
+      "position": {
+        "x": 200,
+        "y": 950
+      }
+    },
+    {
+      "id": "3ebbc541-d76b-4225-862c-f6785e00db7e",
+      "type": "LIABILITY_ACCOUNT",
+      "subtype": "CREDIT_CARD",
+      "name": "Amex",
+      "balance": 0,
+      "icon": "\ud83d\udcb3",
+      "position": {
+        "x": 450,
+        "y": 950
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "0dd31c78-1e0b-4885-aab1-55cdc7efe3e5",
+      "sourceId": "a0199d98-79c3-44f2-ba50-218a1c51e8cf",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "a0199d98-79c3-44f2-ba50-218a1c51e8cf",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "a0199d98-79c3-44f2-ba50-218a1c51e8cf",
+              "destinationId": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "02a0385d-19bf-40e3-aa98-6e1b55c28cea",
+      "sourceId": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "TOP_UP",
+              "sourceId": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+              "destinationId": "796674cd-ea64-4552-8baf-ec3d70469b96",
+              "amountInCents": 0,
+              "amountInPercentage": 0,
+              "groupIndex": 0,
+              "limit": 100000,
+              "upToEnabled": true
+            },
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+              "destinationId": "bdaa504d-7dc1-4efc-9dc3-314c3173a362",
+              "amountInCents": 0,
+              "amountInPercentage": 60,
+              "groupIndex": 1,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "PERCENTAGE",
+              "sourceId": "ab289b61-e83a-4eb3-9e65-2473f1cef57b",
+              "destinationId": "f27bd379-a009-43ef-9260-e2d4bfada6bc",
+              "amountInCents": 0,
+              "amountInPercentage": 30,
+              "groupIndex": 1,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f38a523f-6752-46a3-8751-71a93956e60a",
+      "sourceId": "f27bd379-a009-43ef-9260-e2d4bfada6bc",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "f27bd379-a009-43ef-9260-e2d4bfada6bc",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "AVALANCHE",
+              "sourceId": "f27bd379-a009-43ef-9260-e2d4bfada6bc",
+              "destinationId": "4eb5d198-22bb-45e2-8c63-986d4d661b61",
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            },
+            {
+              "type": "AVALANCHE",
+              "sourceId": "f27bd379-a009-43ef-9260-e2d4bfada6bc",
+              "destinationId": "3ebbc541-d76b-4225-862c-f6785e00db7e",
+              "amountInCents": 0,
+              "amountInPercentage": 100,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "viewport": {
+    "x": 321.5,
+    "y": -198.4,
+    "zoom": 0.9
+  }
+}
