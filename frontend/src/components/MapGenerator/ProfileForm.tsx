@@ -1,5 +1,5 @@
-import React from 'react';
 import { ProfileFormData, ProductGoal } from '../../types';
+import { CustomSelect } from './CustomSelect';
 
 interface ProfileFormProps {
   formData: ProfileFormData;
@@ -74,52 +74,28 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           <label htmlFor="userType" className="field-label">
             I am <span className="field-required">*</span>
           </label>
-          <div className="select-wrapper">
-            <select
-              id="userType"
-              className="select-input"
-              value={formData.userType}
-              onChange={(e) =>
-                updateField('userType', e.target.value as 'INDIVIDUAL' | 'BUSINESS')
-              }
-              required
-            >
-              <option value="" disabled>
-                Select type...
-              </option>
-              {USER_TYPES.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <ChevronIcon />
-          </div>
+          <CustomSelect
+            id="userType"
+            options={USER_TYPES}
+            value={formData.userType}
+            onChange={(value) => updateField('userType', value as 'INDIVIDUAL' | 'BUSINESS')}
+            placeholder="Select type..."
+            required
+          />
         </div>
 
         <div className="field-group">
           <label htmlFor="annualIncome" className="field-label">
             Annual Income <span className="field-required">*</span>
           </label>
-          <div className="select-wrapper">
-            <select
-              id="annualIncome"
-              className="select-input"
-              value={formData.annualIncome}
-              onChange={(e) => updateField('annualIncome', e.target.value)}
-              required
-            >
-              <option value="" disabled>
-                Select range...
-              </option>
-              {INCOME_RANGES.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <ChevronIcon />
-          </div>
+          <CustomSelect
+            id="annualIncome"
+            options={INCOME_RANGES}
+            value={formData.annualIncome}
+            onChange={(value) => updateField('annualIncome', value)}
+            placeholder="Select range..."
+            required
+          />
         </div>
       </div>
 
@@ -129,50 +105,28 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
           <label htmlFor="ageGroup" className="field-label">
             Age Group <span className="field-required">*</span>
           </label>
-          <div className="select-wrapper">
-            <select
-              id="ageGroup"
-              className="select-input"
-              value={formData.ageGroup}
-              onChange={(e) => updateField('ageGroup', e.target.value)}
-              required
-            >
-              <option value="" disabled>
-                Select age...
-              </option>
-              {AGE_GROUPS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <ChevronIcon />
-          </div>
+          <CustomSelect
+            id="ageGroup"
+            options={AGE_GROUPS}
+            value={formData.ageGroup}
+            onChange={(value) => updateField('ageGroup', value)}
+            placeholder="Select age..."
+            required
+          />
         </div>
 
         <div className="field-group">
           <label htmlFor="occupation" className="field-label">
             Occupation <span className="field-required">*</span>
           </label>
-          <div className="select-wrapper">
-            <select
-              id="occupation"
-              className="select-input"
-              value={formData.occupation}
-              onChange={(e) => updateField('occupation', e.target.value)}
-              required
-            >
-              <option value="" disabled>
-                Select occupation...
-              </option>
-              {OCCUPATIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            <ChevronIcon />
-          </div>
+          <CustomSelect
+            id="occupation"
+            options={OCCUPATIONS}
+            value={formData.occupation}
+            onChange={(value) => updateField('occupation', value)}
+            placeholder="Select occupation..."
+            required
+          />
         </div>
       </div>
 
@@ -203,22 +157,3 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     </>
   );
 };
-
-const ChevronIcon: React.FC = () => (
-  <svg
-    className="select-icon"
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M4 6L8 10L12 6"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);

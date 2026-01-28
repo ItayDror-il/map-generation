@@ -33,6 +33,242 @@ except Exception as e:
 
 
 # ============================================================================
+# JSON VALIDATION (Based on PLAYGROUND_JSON_SPECIFICATION.md)
+# ============================================================================
+
+VALID_NODE_TYPES = {"PORT", "POD", "DEPOSITORY_ACCOUNT", "LIABILITY_ACCOUNT", "INVESTMENT_ACCOUNT", "DESTINATION_ACCOUNT"}
+VALID_NODE_SUBTYPES = {
+    "DEPOSITORY_ACCOUNT": {"SAVINGS", "CHECKING"},
+    "LIABILITY_ACCOUNT": {"CREDIT_CARD", "MORTGAGE", "PERSONAL_LOAN", "HOME_LOAN", "STUDENT_LOAN", "AUTO_LOAN", "BUSINESS_LOAN"},
+    "INVESTMENT_ACCOUNT": {"PENSION", "IRA", "BROKERAGE", "EDUCATION_SAVINGS"},
+}
+VALID_TRIGGER_TYPES = {"INCOMING_FUNDS", "SCHEDULED"}
+VALID_ACTION_TYPES = {
+    "FIXED", "PERCENTAGE", "TOP_UP", "ROUND_DOWN",
+    "NEXT_PAYMENT_MINIMUM", "TOTAL_AMOUNT_DUE", "PERCENTAGE_LIABILITY_BALANCE",
+    "SNOWBALL", "AVALANCHE"
+}
+LIABILITY_ONLY_ACTIONS = {"NEXT_PAYMENT_MINIMUM", "TOTAL_AMOUNT_DUE", "PERCENTAGE_LIABILITY_BALANCE", "SNOWBALL", "AVALANCHE"}
+TOP_UP_VALID_DESTINATIONS = {"POD", "DEPOSITORY_ACCOUNT"}
+
+
+def validate_playground_json(data: dict) -> tuple[bool, list[str], list[str]]:
+    """
+    Validate JSON against Playground specification.
+    Returns (is_valid, errors, warnings)
+    """
+    errors = []
+    warnings = []
+
+    # Check top-level structure
+    if "nodes" not in data:
+        errors.append("Missing required 'nodes' array")
+    if "rules" not in data:
+        errors.append("Missing required 'rules' array")
+    if "viewport" not in data:
+        warnings.append("Missing 'viewport' - will use default")
+
+    if errors:
+        return False, errors, warnings
+
+    # Collect node IDs for reference validation
+    node_ids = set()
+    node_types = {}  # id -> type
+
+    # Validate nodes
+    for i, node in enumerate(data.get("nodes", [])):
+        prefix = f"nodes[{i}]"
+
+        # Required fields
+        for field in ["id", "name", "icon", "type", "position"]:
+            if field not in node:
+                errors.append(f"{prefix}: Missing required field '{field}'")
+
+        if "id" in node:
+            if node["id"] in node_ids:
+                errors.append(f"{prefix}: Duplicate node ID '{node['id']}'")
+            node_ids.add(node["id"])
+            node_types[node["id"]] = node.get("type")
+
+        # Type validation
+        node_type = node.get("type")
+        if node_type and node_type not in VALID_NODE_TYPES:
+            errors.append(f"{prefix}: Invalid type '{node_type}'. Must be one of {VALID_NODE_TYPES}")
+
+        # Subtype validation
+        subtype = node.get("subtype")
+        if subtype and node_type in VALID_NODE_SUBTYPES:
+            valid_subtypes = VALID_NODE_SUBTYPES[node_type]
+            if subtype not in valid_subtypes:
+                errors.append(f"{prefix}: Invalid subtype '{subtype}' for {node_type}. Must be one of {valid_subtypes}")
+
+        # Position validation
+        pos = node.get("position", {})
+        if not isinstance(pos.get("x"), (int, float)) or not isinstance(pos.get("y"), (int, float)):
+            errors.append(f"{prefix}: position must have numeric 'x' and 'y'")
+
+        # Balance should be integer (cents)
+        balance = node.get("balance")
+        if balance is not None and not isinstance(balance, int):
+            warnings.append(f"{prefix}: balance should be integer (cents), got {type(balance).__name__}")
+
+    # Validate rules
+    for i, rule in enumerate(data.get("rules", [])):
+        prefix = f"rules[{i}]"
+
+        # Required fields
+        for field in ["id", "sourceId", "trigger", "steps"]:
+            if field not in rule:
+                errors.append(f"{prefix}: Missing required field '{field}'")
+
+        # Source reference validation
+        source_id = rule.get("sourceId")
+        if source_id and source_id not in node_ids:
+            errors.append(f"{prefix}: sourceId '{source_id}' references non-existent node")
+
+        # Trigger validation
+        trigger = rule.get("trigger", {})
+        trigger_type = trigger.get("type")
+        if trigger_type not in VALID_TRIGGER_TYPES:
+            errors.append(f"{prefix}.trigger: Invalid type '{trigger_type}'. Must be one of {VALID_TRIGGER_TYPES}")
+
+        if trigger_type == "SCHEDULED" and not trigger.get("cron"):
+            errors.append(f"{prefix}.trigger: SCHEDULED trigger requires 'cron' expression")
+
+        trigger_source = trigger.get("sourceId")
+        if trigger_source and trigger_source not in node_ids:
+            errors.append(f"{prefix}.trigger: sourceId '{trigger_source}' references non-existent node")
+
+        # Steps validation
+        steps = rule.get("steps", [])
+        if not steps:
+            errors.append(f"{prefix}: Must have at least one step")
+
+        for j, step in enumerate(steps):
+            step_prefix = f"{prefix}.steps[{j}]"
+
+            actions = step.get("actions", [])
+            if not actions:
+                errors.append(f"{step_prefix}: Must have at least one action")
+
+            # Track group percentages
+            group_percentages = {}
+
+            for k, action in enumerate(actions):
+                action_prefix = f"{step_prefix}.actions[{k}]"
+
+                # Required fields
+                for field in ["type", "sourceId", "destinationId", "groupIndex"]:
+                    if field not in action:
+                        errors.append(f"{action_prefix}: Missing required field '{field}'")
+
+                action_type = action.get("type")
+                if action_type and action_type not in VALID_ACTION_TYPES:
+                    errors.append(f"{action_prefix}: Invalid type '{action_type}'. Must be one of {VALID_ACTION_TYPES}")
+
+                # Reference validation
+                action_source = action.get("sourceId")
+                action_dest = action.get("destinationId")
+                if action_source and action_source not in node_ids:
+                    errors.append(f"{action_prefix}: sourceId '{action_source}' references non-existent node")
+                if action_dest and action_dest not in node_ids:
+                    errors.append(f"{action_prefix}: destinationId '{action_dest}' references non-existent node")
+
+                # Destination-specific action validation
+                if action_type in LIABILITY_ONLY_ACTIONS:
+                    dest_type = node_types.get(action_dest)
+                    if dest_type and dest_type != "LIABILITY_ACCOUNT":
+                        errors.append(f"{action_prefix}: {action_type} can only target LIABILITY_ACCOUNT, got {dest_type}")
+
+                if action_type == "TOP_UP":
+                    dest_type = node_types.get(action_dest)
+                    if dest_type and dest_type not in TOP_UP_VALID_DESTINATIONS:
+                        errors.append(f"{action_prefix}: TOP_UP can only target POD or DEPOSITORY_ACCOUNT, got {dest_type}")
+
+                # Amount field validation
+                amount_cents = action.get("amountInCents")
+                amount_pct = action.get("amountInPercentage")
+                group_idx = action.get("groupIndex", 0)
+
+                if action_type == "FIXED":
+                    if amount_cents is None or amount_cents <= 0:
+                        warnings.append(f"{action_prefix}: FIXED action should have positive amountInCents")
+                elif action_type == "PERCENTAGE":
+                    if amount_pct is None:
+                        warnings.append(f"{action_prefix}: PERCENTAGE action should have amountInPercentage")
+                    elif not (0 <= amount_pct <= 100):
+                        errors.append(f"{action_prefix}: amountInPercentage must be 0-100, got {amount_pct}")
+
+                    # Track percentages per group
+                    if group_idx not in group_percentages:
+                        group_percentages[group_idx] = 0
+                    group_percentages[group_idx] += amount_pct or 0
+                elif action_type in {"TOP_UP", "ROUND_DOWN"}:
+                    if amount_cents is None:
+                        warnings.append(f"{action_prefix}: {action_type} action should have amountInCents")
+
+            # Check group percentages don't exceed 100
+            for group_idx, total_pct in group_percentages.items():
+                if total_pct > 100:
+                    warnings.append(f"{step_prefix}: Group {group_idx} percentages sum to {total_pct}%, which exceeds 100%")
+
+    # Validate viewport
+    viewport = data.get("viewport", {})
+    if viewport:
+        for field in ["x", "y", "zoom"]:
+            if field not in viewport:
+                warnings.append(f"viewport: Missing field '{field}'")
+            elif not isinstance(viewport[field], (int, float)):
+                warnings.append(f"viewport.{field}: Should be numeric")
+
+    return len(errors) == 0, errors, warnings
+
+
+def fix_common_json_issues(data: dict) -> dict:
+    """
+    Auto-fix common JSON issues that don't break the structure.
+    """
+    # Ensure viewport exists
+    if "viewport" not in data:
+        data["viewport"] = {"x": 300, "y": 100, "zoom": 0.9}
+
+    # Ensure nodes and rules are arrays
+    if "nodes" not in data:
+        data["nodes"] = []
+    if "rules" not in data:
+        data["rules"] = []
+
+    # Fix node issues
+    for node in data.get("nodes", []):
+        # Ensure balance is integer
+        if "balance" in node and not isinstance(node["balance"], int):
+            try:
+                node["balance"] = int(node["balance"])
+            except (ValueError, TypeError):
+                node["balance"] = 0
+        elif "balance" not in node:
+            node["balance"] = 0
+
+    # Fix action issues
+    for rule in data.get("rules", []):
+        for step in rule.get("steps", []):
+            for action in step.get("actions", []):
+                # Ensure required fields have defaults
+                if "amountInCents" not in action:
+                    action["amountInCents"] = 0
+                if "amountInPercentage" not in action:
+                    action["amountInPercentage"] = 0
+                if "groupIndex" not in action:
+                    action["groupIndex"] = 0
+                if "limit" not in action:
+                    action["limit"] = None
+                if "upToEnabled" not in action:
+                    action["upToEnabled"] = None
+
+    return data
+
+
+# ============================================================================
 # SEQUENCE PLAYGROUND API
 # ============================================================================
 
@@ -375,6 +611,20 @@ async def generate_map(request: GenerateRequest):
         else:
             print("Using simple generation (no ML)")
             map_data = generate_simple(request.prompt, profile)
+
+        # Fix common issues and validate JSON before sending to Sequence
+        map_data = fix_common_json_issues(map_data)
+        is_valid, validation_errors, validation_warnings = validate_playground_json(map_data)
+
+        if validation_warnings:
+            print(f"JSON validation warnings: {validation_warnings}")
+
+        if not is_valid:
+            print(f"JSON validation errors: {validation_errors}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Generated JSON failed validation: {'; '.join(validation_errors[:3])}"
+            )
 
         # Generate explanation
         explanation = generate_explanation(map_data, profile, request.prompt)
