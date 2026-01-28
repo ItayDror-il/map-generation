@@ -53,6 +53,7 @@
     linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 40px 40px;
   animation: gridMove 20s linear infinite;
+  pointer-events: none;
 }
 
 @keyframes gridMove {
@@ -464,6 +465,7 @@
   border: none;
   border-radius: var(--radius-lg);
   cursor: pointer;
+  position: relative;
   transition:
     background var(--duration-fast) var(--ease-out-expo),
     transform var(--duration-fast) var(--ease-out-expo),
