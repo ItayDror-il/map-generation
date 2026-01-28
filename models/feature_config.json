@@ -1,0 +1,173 @@
+{
+  "feature_names": [
+    "income_level",
+    "user_type",
+    "is_business",
+    "debit_card_spender",
+    "activated_ports_norm",
+    "accounts_connected_norm",
+    "age_level",
+    "subscription_level",
+    "complexity_score",
+    "occupation_stability",
+    "incoming_funds_count",
+    "balance_threshold_count",
+    "scheduled_trigger_count",
+    "has_percentage",
+    "has_fixed_amount",
+    "has_overflow",
+    "has_remainder",
+    "rule_count",
+    "destination_count",
+    "source_count",
+    "total_actions",
+    "has_debt_keywords",
+    "has_business_keywords",
+    "has_savings_keywords",
+    "has_budget_keywords",
+    "liability_mention_count",
+    "multiple_liabilities",
+    "has_router_pattern",
+    "has_pod_structure",
+    "percentage_count",
+    "uses_100_percent",
+    "fixed_amount_count"
+  ],
+  "profile_feature_names": [
+    "income_level",
+    "user_type",
+    "is_business",
+    "debit_card_spender",
+    "activated_ports_norm",
+    "accounts_connected_norm",
+    "age_level",
+    "subscription_level",
+    "complexity_score",
+    "occupation_stability"
+  ],
+  "rule_feature_names": [
+    "incoming_funds_count",
+    "balance_threshold_count",
+    "scheduled_trigger_count",
+    "has_percentage",
+    "has_fixed_amount",
+    "has_overflow",
+    "has_remainder",
+    "rule_count",
+    "destination_count",
+    "source_count",
+    "total_actions",
+    "has_debt_keywords",
+    "has_business_keywords",
+    "has_savings_keywords",
+    "has_budget_keywords",
+    "liability_mention_count",
+    "multiple_liabilities",
+    "has_router_pattern",
+    "has_pod_structure",
+    "percentage_count",
+    "uses_100_percent",
+    "fixed_amount_count"
+  ],
+  "feature_weights": {
+    "income_level": 1.5,
+    "user_type": 2.0,
+    "is_business": 2.0,
+    "debit_card_spender": 0.5,
+    "activated_ports_norm": 1.0,
+    "accounts_connected_norm": 1.0,
+    "age_level": 0.5,
+    "subscription_level": 0.5,
+    "complexity_score": 1.5,
+    "occupation_stability": 1.0,
+    "has_debt_keywords": 2.0,
+    "has_business_keywords": 2.0,
+    "has_savings_keywords": 1.5,
+    "has_budget_keywords": 1.5,
+    "rule_count": 1.0,
+    "multiple_liabilities": 1.5
+  },
+  "encodings": {
+    "income": {
+      "UP_TO_10K": 0,
+      "BETWEEN_10K_AND_25K": 1,
+      "BETWEEN_25K_AND_50K": 2,
+      "BETWEEN_50K_AND_100K": 3,
+      "BETWEEN_100K_AND_250K": 4,
+      "OVER_250K": 5
+    },
+    "age": {
+      "18-24": 0,
+      "25-35": 1,
+      "36-44": 2,
+      "45-54": 3,
+      "55-64": 4,
+      "65+": 5
+    },
+    "user_type": {
+      "INDIVIDUAL": 0,
+      "BUSINESS": 1,
+      "ADVISOR": 2
+    },
+    "subscription": {
+      "Starter": 0,
+      "Pro": 1,
+      "Business": 2,
+      "Growth": 3
+    }
+  },
+  "goal_groups": {
+    "debt": [
+      "DEBT_PAYMENT",
+      "PAY_OFF_DEBT"
+    ],
+    "budget": [
+      "AUTOMATE_MY_BUDGETING",
+      "ORGANIZE_FINANCING"
+    ],
+    "savings": [
+      "MAXIMIZE_SAVINGS",
+      "MAXIMIZE_MY_SAVINGS",
+      "SAVE_FOR_TAXES"
+    ],
+    "business": [
+      "PROFIT_FIRST",
+      "OPTIMIZE_CASH_FLOW",
+      "MANAGE_BUSINESS_PAYMENTS"
+    ],
+    "tracking": [
+      "VISUALIZE_AND_TRACK_FINANCES",
+      "MAINTAIN_CONTROL"
+    ],
+    "automation": [
+      "AUTOMATE_MY_BILLS",
+      "AUTOMATE_MY_INVESTMENTS"
+    ]
+  },
+  "occupation_groups": {
+    "high_income_stable": [
+      "EXECUTIVE_OR_MANAGER",
+      "DOCTOR",
+      "ARCHITECT_OR_ENGINEER"
+    ],
+    "professional": [
+      "SCIENTIST_OR_TECHNOLOGIST",
+      "BUSINESS_ANALYST_ACCOUNTANT_OR_FINANCIAL_ADVISOR",
+      "EDUCATOR"
+    ],
+    "variable_income": [
+      "SALES_REPRESENTATIVE_BROKER_AGENT",
+      "GIG_WORKER",
+      "ENTERTAINMENT_SPORTS_ARTS_OR_MEDIA"
+    ],
+    "trade": [
+      "CONSTRUCTION_MECHANIC_OR_MAINTENANCE_WORKER",
+      "MANUFACTURING_OR_PRODUCTION_WORKER"
+    ],
+    "service": [
+      "PERSONAL_CARE_OR_SERVICE_WORKER",
+      "HOSPITALITY_OFFICE_OR_ADMINISTRATIVE_SUPPORT_WORKER",
+      "FOOD_SERVICE_WORKER"
+    ]
+  }
+}

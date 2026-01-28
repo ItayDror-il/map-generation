@@ -15,9 +15,6 @@ build/
 .vscode/
 *.swp
 
-# Models (large files)
-models/
-
 # Frontend
 frontend/node_modules/
 frontend/dist/
