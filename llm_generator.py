@@ -35,7 +35,7 @@ SEQUENCE_SCHEMA = {
         "DEPOSITORY_ACCOUNT": ["CHECKING", "SAVINGS"],
         "LIABILITY_ACCOUNT": ["CREDIT_CARD", "LOAN", "LINE_OF_CREDIT"]
     },
-    "trigger_types": ["INCOMING_FUNDS", "SCHEDULED", "BALANCE_THRESHOLD"],
+    "trigger_types": ["INCOMING_FUNDS", "SCHEDULED"],
     "action_types": [
         "PERCENTAGE", "FIXED", "TOP_UP", "ROUND_DOWN",
         "AVALANCHE", "SNOWBALL", "NEXT_PAYMENT_MINIMUM",
@@ -379,7 +379,7 @@ Return ONLY valid JSON matching this exact structure:
       "id": "UUID",
       "sourceId": "node-id",
       "trigger": {
-        "type": "INCOMING_FUNDS|SCHEDULED|BALANCE_THRESHOLD",
+        "type": "INCOMING_FUNDS|SCHEDULED",
         "sourceId": "node-id",
         "cron": null|"0 0 1 * *"
       },

@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import httpx
+import random
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
@@ -224,35 +225,143 @@ def validate_playground_json(data: dict) -> tuple[bool, list[str], list[str]]:
     return len(errors) == 0, errors, warnings
 
 
-def fix_common_json_issues(data: dict) -> dict:
+def fix_common_json_issues(data: dict, income_bracket: str = "BETWEEN_50K_AND_100K") -> dict:
     """
-    Auto-fix common JSON issues that don't break the structure.
+    Auto-fix common JSON issues to ensure valid output.
+    This is the safety net - fixes LLM mistakes before validation.
     """
-    # Ensure viewport exists
+    # Income bracket to bi-weekly pay (in cents)
+    INCOME_TO_BALANCE = {
+        "UNDER_25K": 83300,
+        "BETWEEN_25K_AND_50K": 156200,
+        "BETWEEN_50K_AND_100K": 312500,
+        "BETWEEN_100K_AND_250K": 729100,
+        "OVER_250K": 1458300,
+    }
+    port_balance = INCOME_TO_BALANCE.get(income_bracket, 312500)
+
+    # Ensure top-level structure
     if "viewport" not in data:
         data["viewport"] = {"x": 300, "y": 100, "zoom": 0.9}
-
-    # Ensure nodes and rules are arrays
     if "nodes" not in data:
         data["nodes"] = []
     if "rules" not in data:
         data["rules"] = []
+    if "name" not in data or not data["name"]:
+        data["name"] = "My Financial Map"
+
+    # Build node type lookup for action fixes
+    node_types = {}
 
     # Fix node issues
     for node in data.get("nodes", []):
-        # Ensure balance is integer
-        if "balance" in node and not isinstance(node["balance"], int):
-            try:
-                node["balance"] = int(node["balance"])
-            except (ValueError, TypeError):
-                node["balance"] = 0
-        elif "balance" not in node:
-            node["balance"] = 0
+        node_id = node.get("id")
+        node_type = node.get("type")
 
-    # Fix action issues
+        # Fix invalid node types
+        if node_type and node_type not in VALID_NODE_TYPES:
+            # Try to map common mistakes
+            type_fixes = {
+                "INCOME": "PORT",
+                "SAVINGS": "DEPOSITORY_ACCOUNT",
+                "CHECKING": "DEPOSITORY_ACCOUNT",
+                "CREDIT": "LIABILITY_ACCOUNT",
+                "DEBT": "LIABILITY_ACCOUNT",
+                "INVESTMENT": "INVESTMENT_ACCOUNT",
+                "ENVELOPE": "POD",
+                "BUCKET": "POD",
+            }
+            node["type"] = type_fixes.get(node_type.upper(), "POD")
+            node_type = node["type"]
+
+        if node_id:
+            node_types[node_id] = node_type
+
+        # Fix balance - generate random if zero or missing
+        balance = node.get("balance")
+        if balance is None or balance == 0:
+            if node_type == "PORT":
+                # Use income-based balance for PORT nodes
+                node["balance"] = port_balance
+            elif node_type == "LIABILITY_ACCOUNT":
+                # Higher random range for debt: $500-$2000
+                node["balance"] = random.randint(50, 200) * 1000
+            else:
+                # Random $200-$1000 for other nodes (in cents, increments of $10)
+                node["balance"] = random.randint(20, 100) * 1000
+        elif not isinstance(balance, int):
+            try:
+                node["balance"] = int(balance)
+            except (ValueError, TypeError):
+                node["balance"] = random.randint(20, 100) * 1000
+
+        # Ensure position exists
+        if "position" not in node or not isinstance(node.get("position"), dict):
+            node["position"] = {"x": 300, "y": 300}
+        else:
+            pos = node["position"]
+            if "x" not in pos or not isinstance(pos.get("x"), (int, float)):
+                pos["x"] = 300
+            if "y" not in pos or not isinstance(pos.get("y"), (int, float)):
+                pos["y"] = 300
+
+    # Fix rule issues
     for rule in data.get("rules", []):
+        # Fix trigger
+        trigger = rule.get("trigger", {})
+        if not isinstance(trigger, dict):
+            trigger = {}
+            rule["trigger"] = trigger
+
+        trigger_type = trigger.get("type")
+
+        # Fix invalid trigger types - CRITICAL FIX
+        if trigger_type not in VALID_TRIGGER_TYPES:
+            # Map common mistakes to valid types
+            trigger_fixes = {
+                "BALANCE_THRESHOLD": "INCOMING_FUNDS",
+                "BALANCE": "INCOMING_FUNDS",
+                "THRESHOLD": "INCOMING_FUNDS",
+                "ON_DEPOSIT": "INCOMING_FUNDS",
+                "DEPOSIT": "INCOMING_FUNDS",
+                "RECURRING": "SCHEDULED",
+                "TIMER": "SCHEDULED",
+                "CRON": "SCHEDULED",
+            }
+            fixed_type = trigger_fixes.get(trigger_type, "INCOMING_FUNDS") if trigger_type else "INCOMING_FUNDS"
+            trigger["type"] = fixed_type
+            trigger_type = fixed_type
+
+        # Ensure trigger has sourceId
+        if "sourceId" not in trigger:
+            trigger["sourceId"] = rule.get("sourceId")
+
+        # SCHEDULED requires cron
+        if trigger_type == "SCHEDULED" and not trigger.get("cron"):
+            trigger["cron"] = "0 0 1 * *"  # Default: 1st of month
+
+        # Ensure steps exist
+        if "steps" not in rule or not rule["steps"]:
+            rule["steps"] = [{"actions": []}]
+
         for step in rule.get("steps", []):
+            if "actions" not in step:
+                step["actions"] = []
+
             for action in step.get("actions", []):
+                action_type = action.get("type")
+
+                # Fix invalid action types
+                if action_type and action_type not in VALID_ACTION_TYPES:
+                    action_fixes = {
+                        "REMAINDER": "PERCENTAGE",  # Use 100% with higher groupIndex
+                        "TRANSFER": "FIXED",
+                        "SPLIT": "PERCENTAGE",
+                        "PAY_MINIMUM": "NEXT_PAYMENT_MINIMUM",
+                        "PAY_FULL": "TOTAL_AMOUNT_DUE",
+                    }
+                    action["type"] = action_fixes.get(action_type, "PERCENTAGE")
+
                 # Ensure required fields have defaults
                 if "amountInCents" not in action:
                     action["amountInCents"] = 0
@@ -264,6 +373,15 @@ def fix_common_json_issues(data: dict) -> dict:
                     action["limit"] = None
                 if "upToEnabled" not in action:
                     action["upToEnabled"] = None
+
+                # Fix liability-only actions targeting wrong node types
+                dest_id = action.get("destinationId")
+                dest_type = node_types.get(dest_id)
+                if action.get("type") in LIABILITY_ONLY_ACTIONS and dest_type and dest_type != "LIABILITY_ACCOUNT":
+                    # Convert to PERCENTAGE instead
+                    action["type"] = "PERCENTAGE"
+                    if not action.get("amountInPercentage"):
+                        action["amountInPercentage"] = 100
 
     return data
 
@@ -334,15 +452,19 @@ SIMPLE_SYSTEM_PROMPT = """You are generating JSON for Sequence, a financial auto
 
 Return ONLY valid JSON matching this structure:
 {
-  "nodes": [{"id": "UUID", "type": "POD|PORT|DEPOSITORY_ACCOUNT|LIABILITY_ACCOUNT", "subtype": null|"CHECKING"|"SAVINGS"|"CREDIT_CARD"|"LOAN", "name": "string", "balance": 0, "icon": "emoji", "position": {"x": number, "y": number}}],
-  "rules": [{"id": "UUID", "sourceId": "node-id", "trigger": {"type": "INCOMING_FUNDS|SCHEDULED|BALANCE_THRESHOLD", "sourceId": "node-id", "cron": null}, "steps": [{"actions": [{"type": "PERCENTAGE|FIXED|AVALANCHE|SNOWBALL", "sourceId": "node-id", "destinationId": "node-id", "amountInCents": 0, "amountInPercentage": 0, "groupIndex": 0, "limit": null, "upToEnabled": null}]}]}],
+  "name": "Short Name (4 words max)",
+  "nodes": [{"id": "UUID", "type": "POD|PORT|DEPOSITORY_ACCOUNT|LIABILITY_ACCOUNT", "subtype": null|"CHECKING"|"SAVINGS"|"CREDIT_CARD"|"LOAN", "name": "string", "balance": 50000, "icon": "emoji", "position": {"x": number, "y": number}}],
+  "rules": [{"id": "UUID", "sourceId": "node-id", "trigger": {"type": "INCOMING_FUNDS|SCHEDULED", "sourceId": "node-id", "cron": null}, "steps": [{"actions": [{"type": "PERCENTAGE|FIXED|AVALANCHE|SNOWBALL", "sourceId": "node-id", "destinationId": "node-id", "amountInCents": 0, "amountInPercentage": 0, "groupIndex": 0, "limit": null, "upToEnabled": null}]}]}],
   "viewport": {"x": 300, "y": 100, "zoom": 0.9}
 }
 
-Node types: PORT (income), POD (envelope), DEPOSITORY_ACCOUNT (bank), LIABILITY_ACCOUNT (debt)
-Action types: PERCENTAGE (0-100), FIXED (cents), AVALANCHE/SNOWBALL (debt strategies)
-Use PERCENTAGE 100 with higher groupIndex for "remainder".
-Position: income (x~100) → processing (x~400) → destinations (x~700)
+IMPORTANT RULES:
+- Trigger types: ONLY "INCOMING_FUNDS" or "SCHEDULED" (nothing else!)
+- Node types: PORT (income), POD (envelope), DEPOSITORY_ACCOUNT (bank), LIABILITY_ACCOUNT (debt)
+- Action types: PERCENTAGE (0-100), FIXED (cents), AVALANCHE/SNOWBALL (debt, LIABILITY_ACCOUNT only)
+- Use PERCENTAGE 100 with higher groupIndex for "remainder"
+- Position: income (x~100) → processing (x~400) → destinations (x~700)
+- All balances must be non-zero (use values 20000-100000 cents)
 Return ONLY JSON - no explanations."""
 
 
@@ -613,7 +735,7 @@ async def generate_map(request: GenerateRequest):
             map_data = generate_simple(request.prompt, profile)
 
         # Fix common issues and validate JSON before sending to Sequence
-        map_data = fix_common_json_issues(map_data)
+        map_data = fix_common_json_issues(map_data, income_bracket=profile.get("ANNUALINCOME", ""))
         is_valid, validation_errors, validation_warnings = validate_playground_json(map_data)
 
         if validation_warnings:
