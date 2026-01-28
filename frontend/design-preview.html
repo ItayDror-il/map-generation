@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sequence Map Generator - Design Preview</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       DESIGN SYSTEM
+       ============================================ */
+    :root {
+      /* Primary - Deep Violet */
+      --color-primary-900: #1e1145;
+      --color-primary-800: #2d1a66;
+      --color-primary-700: #3d2387;
+      --color-primary-600: #4f2da8;
+      --color-primary-500: #6237c9;
+      --color-primary-400: #7c52d4;
+      --color-primary-300: #9b7ae0;
+      --color-primary-200: #c4b3ed;
+      --color-primary-100: #e8e1f7;
+      --color-primary-50: #f5f2fb;
+
+      /* Accent - Electric Cyan */
+      --color-accent-500: #00d4aa;
+      --color-accent-400: #1aebbc;
+      --color-accent-glow: rgba(0, 212, 170, 0.4);
+
+      /* Neutral - Warm Ivory to Charcoal */
+      --color-ivory-50: #fefdfb;
+      --color-ivory-100: #faf8f5;
+      --color-ivory-200: #f3f0eb;
+      --color-ivory-300: #e8e4dd;
+      --color-charcoal-400: #8a8279;
+      --color-charcoal-500: #5c564e;
+      --color-charcoal-600: #3d3935;
+      --color-charcoal-700: #2a2825;
+      --color-charcoal-800: #1a1917;
+
+      /* Semantic */
+      --color-error: #e53935;
+      --color-success: #00a676;
+
+      /* Typography */
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Instrument Sans', system-ui, sans-serif;
+
+      /* Scale */
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.25rem;
+      --text-xl: 1.5rem;
+      --text-2xl: 2rem;
+      --text-3xl: 2.5rem;
+
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      /* Effects */
+      --shadow-md: 0 2px 4px rgba(45, 26, 102, 0.04), 0 4px 8px rgba(45, 26, 102, 0.06), 0 8px 16px rgba(45, 26, 102, 0.04);
+      --shadow-lg: 0 4px 8px rgba(45, 26, 102, 0.04), 0 8px 16px rgba(45, 26, 102, 0.06), 0 16px 32px rgba(45, 26, 102, 0.08);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-fast: 150ms;
+      --duration-normal: 250ms;
+
+      /* Grid */
+      --grid-color: rgba(98, 55, 201, 0.06);
+      --grid-size: 32px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--color-charcoal-700);
+      background: var(--color-ivory-50);
+      line-height: 1.55;
+    }
+
+    /* ============================================
+       PAGE LAYOUT
+       ============================================ */
+    .page-container {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 1024px) {
+      .page-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ============================================
+       HERO PANEL
+       ============================================ */
+    .hero-panel {
+      display: none;
+      position: relative;
+      background: linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-700) 50%, var(--color-primary-800) 100%);
+      overflow: hidden;
+    }
+
+    @media (min-width: 1024px) {
+      .hero-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: var(--space-16);
+      }
+    }
+
+    .hero-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(40px, 40px); }
+    }
+
+    .hero-nodes {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1;
+    }
+
+    .hero-node {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-2xl);
+      animation: nodeFloat 6s ease-in-out infinite;
+    }
+
+    .hero-node:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+    .hero-node:nth-child(2) { top: 30%; right: 15%; animation-delay: 1s; }
+    .hero-node:nth-child(3) { bottom: 30%; left: 10%; animation-delay: 2s; }
+    .hero-node:nth-child(4) { bottom: 15%; right: 25%; animation-delay: 1.5s; }
+    .hero-node:nth-child(5) { top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: 0.5s; }
+
+    @keyframes nodeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero-connections {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-connection {
+      stroke: var(--color-accent-500);
+      stroke-width: 2;
+      fill: none;
+      stroke-dasharray: 8 4;
+      animation: flowDash 2s linear infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes flowDash {
+      to { stroke-dashoffset: -12; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      margin-top: var(--space-12);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      color: white;
+      margin-bottom: var(--space-4);
+      line-height: 1.15;
+    }
+
+    .hero-subtitle {
+      font-size: var(--text-lg);
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 320px;
+      line-height: 1.75;
+    }
+
+    /* ============================================
+       FORM PANEL
+       ============================================ */
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--space-6);
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      .form-panel { padding: var(--space-12); }
+    }
+
+    @media (min-width: 1024px) {
+      .form-panel { padding: var(--space-16); }
+    }
+
+    .form-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: var(--grid-size) var(--grid-size);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .form-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ============================================
+       FORM HEADER
+       ============================================ */
+    .form-header { margin-bottom: var(--space-10); }
+
+    .form-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-primary-100);
+      border-radius: var(--radius-full);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-primary-700);
+      margin-bottom: var(--space-4);
+    }
+
+    .form-badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-accent-500);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .form-title {
+      font-family: var(--font-display);
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-3xl));
+      color: var(--color-charcoal-800);
+      line-height: 1.15;
+      margin-bottom: var(--space-3);
+    }
+
+    .form-description {
+      color: var(--color-charcoal-500);
+      line-height: 1.75;
+    }
+
+    /* ============================================
+       FORM FIELDS
+       ============================================ */
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+    }
+
+    @media (min-width: 480px) {
+      .field-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    .field-label {
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-charcoal-600);
+    }
+
+    .field-required { color: var(--color-primary-500); }
+
+    /* ============================================
+       SELECT
+       ============================================ */
+    .select-wrapper { position: relative; }
+
+    .select-input {
+      width: 100%;
+      height: 48px;
+      padding: 0 var(--space-12) 0 var(--space-4);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-charcoal-700);
+      background: white;
+      border: 1.5px solid var(--color-ivory-300);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      appearance: none;
+      transition: border-color var(--duration-fast) var(--ease-out-expo), box-shadow var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .select-input:hover { border-color: var(--color-primary-300); }
+
+    .select-input:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+      box-shadow: 0 0 0 3px var(--color-primary-100);
+    }
+
+    .select-icon {
+      position: absolute;
+      right: var(--space-4);
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--color-charcoal-400);
+    }
+
+    /* ============================================
+       MULTI-SELECT
+       ============================================ */
+    .multiselect-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2);
+    }
+
+    @media (min-width: 480px) {
+      .multiselect-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .multiselect-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-2);
+      background: white;
+      border: 1.5px solid var(--color-ivory-300);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-charcoal-600);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .multiselect-option:hover {
+      border-color: var(--color-primary-300);
+      transform: translateY(-1px);
+    }
+
+    .multiselect-option.selected {
+      background: var(--color-primary-50);
+      border-color: var(--color-primary-500);
+      color: var(--color-primary-700);
+    }
+
+    /* ============================================
+       TEXTAREA
+       ============================================ */
+    .textarea-wrapper { position: relative; }
+
+    .textarea-input {
+      width: 100%;
+      min-height: 120px;
+      padding: var(--space-4);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.75;
+      color: var(--color-charcoal-700);
+      background: white;
+      border: 1.5px solid var(--color-ivory-300);
+      border-radius: var(--radius-lg);
+      resize: vertical;
+      transition: border-color var(--duration-fast) var(--ease-out-expo), box-shadow var(--duration-fast) var(--ease-out-expo);
+    }
+
+    .textarea-input::placeholder { color: var(--color-charcoal-400); }
+    .textarea-input:hover { border-color: var(--color-primary-300); }
+    .textarea-input:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+      box-shadow: 0 0 0 3px var(--color-primary-100);
+    }
+
+    .textarea-counter {
+      position: absolute;
+      bottom: var(--space-3);
+      right: var(--space-4);
+      font-size: 0.75rem;
+      color: var(--color-charcoal-400);
+    }
+
+    .text-caption {
+      font-size: var(--text-sm);
+      color: var(--color-charcoal-400);
+      margin-top: var(--space-2);
+    }
+
+    /* ============================================
+       BUTTON
+       ============================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: var(--text-base);
+      border: none;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out-expo);
+      position: relative;
+    }
+
+    .btn-primary {
+      width: 100%;
+      height: 56px;
+      margin-top: var(--space-4);
+      background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, var(--color-accent-500), var(--color-primary-500));
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      filter: blur(12px);
+      transition: opacity var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .btn-primary:hover::after { opacity: 0.4; }
+
+    /* ============================================
+       STATE TABS (for preview)
+       ============================================ */
+    .preview-tabs {
+      position: fixed;
+      top: var(--space-4);
+      right: var(--space-4);
+      display: flex;
+      gap: var(--space-2);
+      z-index: 100;
+      background: white;
+      padding: var(--space-2);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .preview-tab {
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      color: var(--color-charcoal-500);
+    }
+
+    .preview-tab.active {
+      background: var(--color-primary-100);
+      color: var(--color-primary-700);
+    }
+
+    /* ============================================
+       RESULTS STATE
+       ============================================ */
+    .results-container {
+      animation: fadeSlideUp 0.4s var(--ease-out-expo);
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+    }
+
+    .results-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e8f5e9;
+      border-radius: var(--radius-lg);
+      font-size: var(--text-xl);
+    }
+
+    .results-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      color: var(--color-charcoal-800);
+    }
+
+    .results-card {
+      background: white;
+      border: 1px solid var(--color-ivory-300);
+      border-radius: var(--radius-xl);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+    }
+
+    .results-card h3 {
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+      color: var(--color-charcoal-700);
+    }
+
+    .results-explanation {
+      line-height: 1.75;
+      color: var(--color-charcoal-600);
+      white-space: pre-wrap;
+    }
+
+    .results-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      margin-top: var(--space-8);
+    }
+
+    @media (min-width: 480px) {
+      .results-actions { flex-direction: row; }
+    }
+
+    .btn-playground {
+      flex: 1;
+      height: 52px;
+      background: var(--color-accent-500);
+      color: var(--color-charcoal-900);
+      font-weight: 600;
+    }
+
+    .btn-playground:hover {
+      background: var(--color-accent-400);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3), 0 8px 24px rgba(0, 212, 170, 0.2);
+    }
+
+    .btn-secondary {
+      flex: 1;
+      height: 52px;
+      background: transparent;
+      border: 1.5px solid var(--color-primary-200);
+      color: var(--color-primary-600);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-primary-50);
+      border-color: var(--color-primary-400);
+    }
+
+    .results-hint {
+      margin-top: var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--color-charcoal-400);
+      text-align: center;
+    }
+
+    /* ============================================
+       LOADING STATE
+       ============================================ */
+    .loading-container {
+      text-align: center;
+      padding: var(--space-12) 0;
+    }
+
+    .loading-orb {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto var(--space-6);
+      position: relative;
+    }
+
+    .loading-orb::before,
+    .loading-orb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+
+    .loading-orb::before {
+      border-top-color: var(--color-primary-500);
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-orb::after {
+      border-right-color: var(--color-accent-500);
+      animation: spin 1.5s linear infinite reverse;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: var(--text-lg);
+      color: var(--color-charcoal-600);
+      margin-bottom: var(--space-2);
+    }
+
+    .loading-subtext {
+      font-size: var(--text-sm);
+      color: var(--color-charcoal-400);
+    }
+
+    /* State visibility */
+    .state { display: none; }
+    .state.active { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Preview state switcher -->
+  <div class="preview-tabs">
+    <button class="preview-tab active" data-state="form">Form</button>
+    <button class="preview-tab" data-state="loading">Loading</button>
+    <button class="preview-tab" data-state="results">Results</button>
+  </div>
+
+  <div class="page-container">
+    <!-- Hero Panel (visible on desktop) -->
+    <aside class="hero-panel">
+      <svg class="hero-connections" viewBox="0 0 400 400">
+        <path class="hero-connection" d="M 80 120 Q 200 80 240 160" />
+        <path class="hero-connection" d="M 240 160 Q 280 220 200 280" />
+        <path class="hero-connection" d="M 200 280 Q 120 320 80 260" />
+        <path class="hero-connection" d="M 80 260 Q 40 180 80 120" />
+        <path class="hero-connection" d="M 200 200 L 80 120" />
+        <path class="hero-connection" d="M 200 200 L 240 160" />
+        <path class="hero-connection" d="M 200 200 L 200 280" />
+        <path class="hero-connection" d="M 200 200 L 80 260" />
+      </svg>
+
+      <div class="hero-nodes">
+        <div class="hero-node">📥</div>
+        <div class="hero-node">🏦</div>
+        <div class="hero-node">📈</div>
+        <div class="hero-node">💳</div>
+        <div class="hero-node">💰</div>
+      </div>
+
+      <div class="hero-content">
+        <h2 class="hero-title">Automate Your<br>Money Flow</h2>
+        <p class="hero-subtitle">Set rules once. Let your money move itself to the right places, every single time.</p>
+      </div>
+    </aside>
+
+    <!-- Form Panel -->
+    <div class="form-panel">
+      <div class="form-wrapper">
+        <!-- FORM STATE -->
+        <div class="state active" id="state-form">
+          <header class="form-header">
+            <div class="form-badge">
+              <span class="form-badge-dot"></span>
+              <span>AI-Powered</span>
+            </div>
+            <h1 class="form-title">Design Your Financial Automation</h1>
+            <p class="form-description">Tell us about yourself and your goals. We'll create a personalized money flow map in seconds.</p>
+          </header>
+
+          <form class="form-fields">
+            <!-- Row 1: Type & Income -->
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">I am <span class="field-required">*</span></label>
+                <div class="select-wrapper">
+                  <select class="select-input">
+                    <option value="" disabled selected>Select type...</option>
+                    <option>Individual</option>
+                    <option>Business</option>
+                  </select>
+                  <svg class="select-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Annual Income <span class="field-required">*</span></label>
+                <div class="select-wrapper">
+                  <select class="select-input">
+                    <option value="" disabled selected>Select range...</option>
+                    <option>Under $25,000</option>
+                    <option>$25,000 - $50,000</option>
+                    <option>$50,000 - $100,000</option>
+                    <option>$100,000 - $250,000</option>
+                    <option>Over $250,000</option>
+                  </select>
+                  <svg class="select-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Row 2: Age & Occupation -->
+            <div class="field-row">
+              <div class="field-group">
+                <label class="field-label">Age Group <span class="field-required">*</span></label>
+                <div class="select-wrapper">
+                  <select class="select-input">
+                    <option value="" disabled selected>Select age...</option>
+                    <option>18-24</option>
+                    <option>25-34</option>
+                    <option>35-44</option>
+                    <option>45-54</option>
+                    <option>55-64</option>
+                    <option>65+</option>
+                  </select>
+                  <svg class="select-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label class="field-label">Occupation <span class="field-required">*</span></label>
+                <div class="select-wrapper">
+                  <select class="select-input">
+                    <option value="" disabled selected>Select occupation...</option>
+                    <option>Employed</option>
+                    <option>Self-Employed</option>
+                    <option>Freelancer</option>
+                    <option>Gig Worker</option>
+                    <option>Business Owner</option>
+                    <option>Retired</option>
+                    <option>Student</option>
+                  </select>
+                  <svg class="select-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Goals Multi-select -->
+            <div class="field-group">
+              <label class="field-label">What are your goals? <span style="font-weight: 400; color: var(--color-charcoal-400);">(optional)</span></label>
+              <div class="multiselect-grid">
+                <button type="button" class="multiselect-option selected">💳 Debt</button>
+                <button type="button" class="multiselect-option">🏦 Savings</button>
+                <button type="button" class="multiselect-option selected">📊 Budget</button>
+                <button type="button" class="multiselect-option">📋 Taxes</button>
+                <button type="button" class="multiselect-option">📈 Invest</button>
+                <button type="button" class="multiselect-option">🛡️ Emergency</button>
+              </div>
+            </div>
+
+            <!-- Goal Description -->
+            <div class="field-group">
+              <label class="field-label">Describe your financial goals <span class="field-required">*</span></label>
+              <div class="textarea-wrapper">
+                <textarea class="textarea-input" placeholder="I want to pay off my credit cards while building an emergency fund. I'd like to save 15% of each paycheck and put extra money toward my highest interest debt first..."></textarea>
+                <span class="textarea-counter">0/1000</span>
+              </div>
+              <p class="text-caption">Be specific about amounts, accounts, and priorities for the best results.</p>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="button" class="btn btn-primary">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M10 2L11.5 7.5L17 9L11.5 10.5L10 16L8.5 10.5L3 9L8.5 7.5L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M15 14L15.75 16L17.5 16.5L15.75 17L15 19L14.25 17L12.5 16.5L14.25 16L15 14Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Generate My Map</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- LOADING STATE -->
+        <div class="state" id="state-loading">
+          <div class="loading-container">
+            <div class="loading-orb"></div>
+            <p class="loading-text">Analyzing your financial profile...</p>
+            <p class="loading-subtext">This usually takes 10-20 seconds</p>
+          </div>
+        </div>
+
+        <!-- RESULTS STATE -->
+        <div class="state" id="state-results">
+          <div class="results-container">
+            <div class="results-header">
+              <div class="results-icon">✨</div>
+              <h2 class="results-title">Your Map is Ready</h2>
+            </div>
+
+            <div class="results-card">
+              <h3>Here's what we built for you:</h3>
+              <div class="results-explanation">Based on your profile as a 25-34 year old individual earning $50,000-$100,000, here's your personalized automation map:
+
+<strong>📥 Income Port</strong>
+Your paycheck flows in here first. Every time money arrives, it automatically routes to the right places.
+
+<strong>💰 Allocation Pod</strong>
+This is your central hub. It splits your income:
+• 15% → Emergency Fund (building your safety net)
+• 10% → Retirement Savings
+• Remaining → Debt Payoff Pool
+
+<strong>💳 Debt Payoff (Avalanche Method)</strong>
+We're targeting your highest-interest debt first:
+1. Chase Sapphire ($8,000 at 22% APR) - priority #1
+2. Discover Card ($3,500 at 18% APR) - priority #2
+
+Once Chase is paid off, those payments automatically roll into Discover.</div>
+            </div>
+
+            <div class="results-actions">
+              <button type="button" class="btn btn-playground">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M15 9.75V14.25C15 14.6478 14.842 15.0294 14.5607 15.3107C14.2794 15.592 13.8978 15.75 13.5 15.75H3.75C3.35218 15.75 2.97064 15.592 2.68934 15.3107C2.40804 15.0294 2.25 14.6478 2.25 14.25V4.5C2.25 4.10218 2.40804 3.72064 2.68934 3.43934C2.97064 3.15804 3.35218 3 3.75 3H8.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 2.25H15.75V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7.5 10.5L15.75 2.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Open in Playground</span>
+              </button>
+              <button type="button" class="btn btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M1.5 3V7.5H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3.51 11.25C4.01717 12.5765 4.95536 13.6948 6.17316 14.4265C7.39097 15.1582 8.8178 15.4614 10.2265 15.2879C11.6352 15.1145 12.9444 14.4747 13.9485 13.4706C14.9525 12.4665 15.5924 11.1573 15.7658 9.74865C15.9393 8.33995 15.6361 6.91312 14.9044 5.69531C14.1727 4.47751 13.0544 3.53932 11.7279 3.03215C10.4014 2.52498 8.94607 2.43391 7.56407 2.77267C6.18207 3.11143 4.94526 3.8619 4.005 4.92L1.5 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Start Over</span>
+              </button>
+            </div>
+
+            <p class="results-hint">The playground lets you visualize and adjust your map before saving.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple state switching for preview
+    document.querySelectorAll('.preview-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Update active tab
+        document.querySelectorAll('.preview-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show correct state
+        const stateName = tab.dataset.state;
+        document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+        document.getElementById('state-' + stateName).classList.add('active');
+      });
+    });
+
+    // Toggle multiselect options
+    document.querySelectorAll('.multiselect-option').forEach(option => {
+      option.addEventListener('click', () => {
+        option.classList.toggle('selected');
+      });
+    });
+
+    // Character counter
+    const textarea = document.querySelector('.textarea-input');
+    const counter = document.querySelector('.textarea-counter');
+    textarea.addEventListener('input', () => {
+      counter.textContent = textarea.value.length + '/1000';
+    });
+  </script>
+</body>
+</html>

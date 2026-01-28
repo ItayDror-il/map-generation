@@ -4,7 +4,7 @@
       "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       "type": "PORT",
       "subtype": null,
-      "name": "Business Revenue",
+      "name": "Income",
       "balance": 0,
       "icon": "\ud83d\udce5",
       "position": {
@@ -16,66 +16,54 @@
       "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
       "type": "POD",
       "subtype": null,
-      "name": "Profit (5%)",
+      "name": "Avalanche",
       "balance": 0,
       "icon": "\ud83d\udcb0",
       "position": {
         "x": 400,
-        "y": 150
+        "y": 300
       }
     },
     {
       "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-      "type": "POD",
-      "subtype": null,
-      "name": "Owner Pay (50%)",
+      "type": "DEPOSITORY_ACCOUNT",
+      "subtype": "SAVINGS",
+      "name": "Savings",
       "balance": 0,
-      "icon": "\ud83d\udcb5",
+      "icon": "\ud83c\udfe6",
       "position": {
-        "x": 400,
-        "y": 250
+        "x": 700,
+        "y": 150
       }
     },
     {
       "id": "d4e5f6a7-b8c9-0123-def0-234567890123",
-      "type": "POD",
-      "subtype": null,
-      "name": "Tax Reserve (15%)",
-      "balance": 0,
-      "icon": "\ud83d\udccb",
+      "type": "LIABILITY_ACCOUNT",
+      "subtype": "CREDIT_CARD",
+      "name": "Chase Sapphire",
+      "balance": 800000,
+      "icon": "\ud83d\udcb3",
       "position": {
-        "x": 400,
+        "x": 700,
         "y": 350
       }
     },
     {
       "id": "e5f6a7b8-c9d0-1234-ef01-345678901234",
-      "type": "POD",
-      "subtype": null,
-      "name": "Operating Expenses (30%)",
-      "balance": 0,
-      "icon": "\u2699\ufe0f",
-      "position": {
-        "x": 400,
-        "y": 450
-      }
-    },
-    {
-      "id": "f6a7b8c9-d0e1-2345-f012-456789012345",
-      "type": "DEPOSITORY_ACCOUNT",
-      "subtype": "CHECKING",
-      "name": "Business Checking",
-      "balance": 0,
-      "icon": "\ud83c\udfe6",
+      "type": "LIABILITY_ACCOUNT",
+      "subtype": "CREDIT_CARD",
+      "name": "Discover Card",
+      "balance": 350000,
+      "icon": "\ud83d\udcb3",
       "position": {
         "x": 700,
-        "y": 300
+        "y": 450
       }
     }
   ],
   "rules": [
     {
-      "id": "11111111-2222-3333-4444-555555555555",
+      "id": "f6a7b8c9-d0e1-2345-f012-456789012345",
       "sourceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       "trigger": {
         "type": "INCOMING_FUNDS",
@@ -90,38 +78,53 @@
               "sourceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
               "destinationId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
               "amountInCents": 0,
-              "amountInPercentage": 5,
+              "amountInPercentage": 100,
+              "groupIndex": 0,
+              "limit": null,
+              "upToEnabled": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-e1f2-3456-0123-567890123456",
+      "sourceId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "trigger": {
+        "type": "INCOMING_FUNDS",
+        "sourceId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "cron": null
+      },
+      "steps": [
+        {
+          "actions": [
+            {
+              "type": "FIXED",
+              "sourceId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+              "destinationId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+              "amountInCents": 10000,
+              "amountInPercentage": 0,
               "groupIndex": 0,
               "limit": null,
               "upToEnabled": null
             },
             {
-              "type": "PERCENTAGE",
-              "sourceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-              "destinationId": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+              "type": "AVALANCHE",
+              "sourceId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+              "destinationId": "d4e5f6a7-b8c9-0123-def0-234567890123",
               "amountInCents": 0,
-              "amountInPercentage": 50,
+              "amountInPercentage": 0,
               "groupIndex": 1,
               "limit": null,
               "upToEnabled": null
             },
             {
-              "type": "PERCENTAGE",
-              "sourceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-              "destinationId": "d4e5f6a7-b8c9-0123-def0-234567890123",
-              "amountInCents": 0,
-              "amountInPercentage": 15,
-              "groupIndex": 2,
-              "limit": null,
-              "upToEnabled": null
-            },
-            {
-              "type": "PERCENTAGE",
-              "sourceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+              "type": "AVALANCHE",
+              "sourceId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
               "destinationId": "e5f6a7b8-c9d0-1234-ef01-345678901234",
               "amountInCents": 0,
-              "amountInPercentage": 30,
-              "groupIndex": 3,
+              "amountInPercentage": 0,
+              "groupIndex": 1,
               "limit": null,
               "upToEnabled": null
             }

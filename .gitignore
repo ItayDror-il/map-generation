@@ -5,7 +5,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.egg-info/
-dist/
 build/
 
 # OS
@@ -18,3 +17,17 @@ build/
 
 # Models (large files)
 models/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.production
+
+# Environment files with secrets
+.env
+.env.local
+*.env.local
+
+# Logs
+*.log
+npm-debug.log*
