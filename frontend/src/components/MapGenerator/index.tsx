@@ -122,6 +122,7 @@ export const MapGenerator: React.FC = () => {
             <ResultsDisplay
               explanation={result.explanation}
               mapId={result.id}
+              mapJson={result.map}
               onReset={handleReset}
             />
           )}

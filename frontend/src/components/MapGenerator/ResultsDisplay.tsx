@@ -3,12 +3,14 @@ import React from 'react';
 interface ResultsDisplayProps {
   explanation: string;
   mapId: string;
+  mapJson?: Record<string, unknown>;
   onReset: () => void;
 }
 
 export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
   explanation,
   mapId,
+  mapJson,
   onReset,
 }) => {
   const playgroundUrl = `https://playground.getsequence.io/?id=${mapId}`;
@@ -73,6 +75,35 @@ export const ResultsDisplay: React.FC<ResultsDisplayProps> = ({
       >
         The playground lets you visualize and adjust your map before saving.
       </p>
+
+      {/* Debug: Show raw JSON */}
+      {mapJson && (
+        <details style={{ marginTop: 'var(--space-6)' }}>
+          <summary
+            style={{
+              cursor: 'pointer',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--color-charcoal-500)',
+            }}
+          >
+            Debug: View Raw JSON
+          </summary>
+          <pre
+            style={{
+              marginTop: 'var(--space-2)',
+              padding: 'var(--space-4)',
+              background: 'var(--color-charcoal-800)',
+              color: 'var(--color-ivory-100)',
+              borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--text-xs)',
+              overflow: 'auto',
+              maxHeight: '300px',
+            }}
+          >
+            {JSON.stringify(mapJson, null, 2)}
+          </pre>
+        </details>
+      )}
     </div>
   );
 };

@@ -1,27 +1,20 @@
 """
 Sequence Map Generator API
 
-Minimal FastAPI server wrapping the LLM generator.
-Single endpoint, full separation from frontend.
+FastAPI server that generates financial automation maps using Claude.
+Simplified version - no ML models required.
 """
 
 import os
-import sys
 import json
 import httpx
-from pathlib import Path
-from typing import Optional
-from contextlib import asynccontextmanager
 from datetime import datetime
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-
-# Add parent dir to path so we can import llm_generator
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from llm_generator import LLMGenerator, validate_sequence_json
+import anthropic
 
 
 # ============================================================================
@@ -33,19 +26,7 @@ SEQUENCE_ADMIN_KEY = os.environ.get("SEQUENCE_ADMIN_KEY", "Admin better_luck_nex
 
 
 async def create_playground_map(map_data: dict, name: str = None) -> str:
-    """
-    Create a playground map via Sequence Admin GraphQL API.
-
-    Args:
-        map_data: The map JSON to save
-        name: Optional name for the map (defaults to timestamp)
-
-    Returns:
-        Playground map ID (UUID)
-
-    Raises:
-        HTTPException if API call fails
-    """
+    """Create a playground map via Sequence Admin GraphQL API."""
     if name is None:
         name = f"Generated Map {datetime.now().strftime('%Y-%m-%d %H:%M')}"
 
@@ -95,131 +76,165 @@ async def create_playground_map(map_data: dict, name: str = None) -> str:
 
 
 # ============================================================================
-# EXPLANATION GENERATOR
+# LLM GENERATION (Simplified - no ML models)
 # ============================================================================
 
-def generate_explanation(map_data: dict, profile: dict, prompt: str) -> str:
-    """
-    Generate human-readable explanation of the map.
+SYSTEM_PROMPT = """You are generating JSON for Sequence, a financial automation platform. Users describe their money management goals, and you create a "map" that automates fund movements between accounts.
 
-    This is separate from LLM generation - it's a deterministic summary
-    of what was created, so frontend changes don't affect it.
-    """
+Return ONLY valid JSON matching this exact structure:
+
+{
+  "nodes": [
+    {
+      "id": "UUID",
+      "type": "POD|PORT|DEPOSITORY_ACCOUNT|LIABILITY_ACCOUNT",
+      "subtype": null|"CHECKING"|"SAVINGS"|"CREDIT_CARD"|"LOAN"|"LINE_OF_CREDIT",
+      "name": "string",
+      "balance": 0,
+      "icon": "emoji",
+      "position": {"x": number, "y": number}
+    }
+  ],
+  "rules": [
+    {
+      "id": "UUID",
+      "sourceId": "node-id",
+      "trigger": {
+        "type": "INCOMING_FUNDS|SCHEDULED|BALANCE_THRESHOLD",
+        "sourceId": "node-id",
+        "cron": null|"0 0 1 * *"
+      },
+      "steps": [{
+        "actions": [{
+          "type": "PERCENTAGE|FIXED|TOP_UP|AVALANCHE|SNOWBALL",
+          "sourceId": "node-id",
+          "destinationId": "node-id",
+          "amountInCents": 0,
+          "amountInPercentage": 0,
+          "groupIndex": 0,
+          "limit": null,
+          "upToEnabled": null
+        }]
+      }]
+    }
+  ],
+  "viewport": {"x": 300, "y": 100, "zoom": 0.9}
+}
+
+Node types:
+- PORT: Income entry point (salary, deposits)
+- POD: Virtual envelope for budgeting
+- DEPOSITORY_ACCOUNT: Bank account (CHECKING/SAVINGS)
+- LIABILITY_ACCOUNT: Debt (CREDIT_CARD/LOAN/LINE_OF_CREDIT)
+
+Action types:
+- PERCENTAGE: amountInPercentage 0-100 (use 100 with higher groupIndex for "remainder")
+- FIXED: amountInCents (dollars × 100)
+- AVALANCHE/SNOWBALL: Debt payoff strategies (only for LIABILITY_ACCOUNT)
+
+CRITICAL - "Remainder" implementation:
+- Use PERCENTAGE with amountInPercentage: 100 and HIGHER groupIndex
+- Actions execute in groupIndex order: lower first
+- Each action operates on what's LEFT after previous actions
+
+Financial Guidelines:
+- Emergency fund: 3-6 months expenses
+- Savings rate: 15-20% of income
+- Debt priority: High interest first (avalanche) or smallest balance (snowball)
+- Business: Reserve 25-35% for taxes
+
+CONSTRAINTS:
+1. Return ONLY JSON - no explanations, no markdown
+2. All IDs must be valid UUIDs (8-4-4-4-12 format)
+3. All sourceId/destinationId must reference existing node IDs
+4. Position nodes left-to-right: income (x~100) → processing (x~400) → destinations (x~700)
+5. Icons: 📥 PORT, 💰 POD, 🏦 DEPOSITORY, 💳 LIABILITY"""
+
+
+def generate_map_with_llm(prompt: str, profile: dict) -> dict:
+    """Generate a map using Claude API."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured")
+
+    client = anthropic.Anthropic(api_key=api_key)
+
+    # Build user message with profile context
+    user_type = profile.get('USER_TYPE', 'INDIVIDUAL')
+    income = profile.get('ANNUALINCOME', 'Unknown')
+    age = profile.get('AGE_GROUP', 'Unknown')
+    occupation = profile.get('OCCUPATION', 'Unknown')
+    goals = profile.get('PRODUCTGOAL', [])
+
+    user_message = f"""User Request: "{prompt}"
+
+Profile:
+- Type: {user_type}
+- Income: {income}
+- Age: {age}
+- Occupation: {occupation}
+- Goals: {', '.join(goals) if goals else 'General budgeting'}
+
+Generate a Sequence map JSON for this user. Return ONLY valid JSON."""
+
+    try:
+        response = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4096,
+            system=SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": user_message}]
+        )
+
+        response_text = response.content[0].text.strip()
+
+        # Handle markdown code blocks
+        if response_text.startswith("```"):
+            response_text = response_text.split("```")[1]
+            if response_text.startswith("json"):
+                response_text = response_text[4:]
+            response_text = response_text.strip()
+
+        return json.loads(response_text)
+
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=500, detail=f"Invalid JSON from LLM: {e}")
+    except anthropic.APIError as e:
+        raise HTTPException(status_code=502, detail=f"Claude API error: {e}")
+
+
+def generate_explanation(map_data: dict, profile: dict) -> str:
+    """Generate human-readable explanation of the map."""
     nodes = map_data.get("nodes", [])
     rules = map_data.get("rules", [])
-
-    # Build node lookup
     node_map = {n["id"]: n for n in nodes}
 
-    # Categorize nodes
+    lines = []
+    user_type = profile.get("USER_TYPE", "INDIVIDUAL")
+
+    if user_type == "BUSINESS":
+        lines.append("Here's your business automation map:\n")
+    else:
+        lines.append("Here's your personalized financial automation map:\n")
+
+    # Summarize nodes
     income_nodes = [n for n in nodes if n["type"] == "PORT"]
     pods = [n for n in nodes if n["type"] == "POD"]
     accounts = [n for n in nodes if n["type"] == "DEPOSITORY_ACCOUNT"]
     debts = [n for n in nodes if n["type"] == "LIABILITY_ACCOUNT"]
 
-    # Build explanation
-    lines = []
-
-    # Intro based on profile
-    user_type = profile.get("USER_TYPE", "INDIVIDUAL")
-    age = profile.get("AGE_GROUP", "")
-    income = profile.get("ANNUALINCOME", "")
-
-    if user_type == "BUSINESS":
-        lines.append("Based on your business profile, here's your personalized automation map:\n")
-    else:
-        intro = "Based on your profile"
-        if age:
-            intro += f" as a {age} year old"
-        if income:
-            income_readable = income.replace("BETWEEN_", "").replace("_AND_", "-").replace("_", " ").lower()
-            if "over" in income_readable.lower():
-                intro += f" earning over $250k"
-            elif "under" in income_readable.lower():
-                intro += f" earning under $25k"
-            else:
-                intro += f" earning ${income_readable}"
-        lines.append(intro + ", here's your personalized automation map:\n")
-
-    # Income sources
     if income_nodes:
-        for node in income_nodes:
-            lines.append(f"**{node['icon']} {node['name']}**")
-            lines.append(f"Your money flows in here first. Every time funds arrive, they automatically route to the right places.\n")
+        lines.append(f"**Income Sources:** {', '.join(n['name'] for n in income_nodes)}\n")
 
-    # Processing pods
     if pods:
-        for pod in pods:
-            lines.append(f"**{pod['icon']} {pod['name']}**")
+        lines.append(f"**Budget Categories:** {', '.join(n['name'] for n in pods)}\n")
 
-            # Find rules that send money FROM this pod
-            pod_rules = [r for r in rules if r.get("sourceId") == pod["id"]]
-            if pod_rules:
-                actions = []
-                for rule in pod_rules:
-                    for step in rule.get("steps", []):
-                        for action in step.get("actions", []):
-                            dest = node_map.get(action.get("destinationId"), {})
-                            if action["type"] == "PERCENTAGE" and action.get("amountInPercentage"):
-                                pct = action["amountInPercentage"]
-                                if pct == 100 and action.get("groupIndex", 0) > 0:
-                                    actions.append(f"Remaining → {dest.get('name', 'destination')}")
-                                else:
-                                    actions.append(f"{pct}% → {dest.get('name', 'destination')}")
-                            elif action["type"] == "FIXED" and action.get("amountInCents"):
-                                amt = action["amountInCents"] / 100
-                                actions.append(f"${amt:,.0f} → {dest.get('name', 'destination')}")
-                            elif action["type"] in ["AVALANCHE", "SNOWBALL"]:
-                                actions.append(f"{action['type'].title()} → {dest.get('name', 'destination')}")
-
-                if actions:
-                    lines.append("Splits your income:")
-                    for a in actions[:5]:  # Limit to 5
-                        lines.append(f"  • {a}")
-            lines.append("")
-
-    # Accounts
     if accounts:
-        lines.append("**Destination Accounts:**")
-        for acc in accounts:
-            subtype = acc.get("subtype", "").replace("_", " ").title()
-            lines.append(f"  • {acc['icon']} {acc['name']} ({subtype})")
-        lines.append("")
+        lines.append(f"**Accounts:** {', '.join(n['name'] for n in accounts)}\n")
 
-    # Debts with strategy
     if debts:
-        # Check for avalanche/snowball strategy
-        has_avalanche = any(
-            action.get("type") == "AVALANCHE"
-            for rule in rules
-            for step in rule.get("steps", [])
-            for action in step.get("actions", [])
-        )
-        has_snowball = any(
-            action.get("type") == "SNOWBALL"
-            for rule in rules
-            for step in rule.get("steps", [])
-            for action in step.get("actions", [])
-        )
+        lines.append(f"**Debts:** {', '.join(n['name'] for n in debts)}\n")
 
-        if has_avalanche:
-            lines.append("**💳 Debt Payoff (Avalanche Method)**")
-            lines.append("Targeting highest-interest debt first:")
-        elif has_snowball:
-            lines.append("**💳 Debt Payoff (Snowball Method)**")
-            lines.append("Targeting smallest balance first:")
-        else:
-            lines.append("**💳 Debt Payments:**")
-
-        for i, debt in enumerate(debts, 1):
-            balance = debt.get("balance", 0) / 100 if debt.get("balance") else 0
-            if balance > 0:
-                lines.append(f"  {i}. {debt['name']} (${balance:,.0f} balance)")
-            else:
-                lines.append(f"  {i}. {debt['name']}")
-
-        if has_avalanche or has_snowball:
-            lines.append("\nOnce the first debt is paid off, those payments automatically roll into the next.")
+    lines.append(f"\n**{len(rules)} automation rules** will move your money automatically.")
 
     return "\n".join(lines)
 
@@ -251,29 +266,10 @@ class GenerateResponse(BaseModel):
 # APP SETUP
 # ============================================================================
 
-# Initialize generator on startup (lazy load)
-_generator: Optional[LLMGenerator] = None
-
-
-def get_generator() -> LLMGenerator:
-    global _generator
-    if _generator is None:
-        api_key = os.environ.get("ANTHROPIC_API_KEY")
-        if not api_key:
-            raise HTTPException(
-                status_code=500,
-                detail="ANTHROPIC_API_KEY not configured"
-            )
-        _generator = LLMGenerator(api_key=api_key)
-    return _generator
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     print("Map Generator API starting...")
     yield
-    # Shutdown
     print("Map Generator API shutting down...")
 
 
@@ -305,18 +301,8 @@ async def health_check():
 
 @app.post("/api/generate-map", response_model=GenerateResponse)
 async def generate_map(request: GenerateRequest):
-    """
-    Generate a financial automation map.
-
-    Takes user profile and free-text goal description.
-    Returns playground map ID, human-readable explanation, and the map JSON.
-
-    The map is automatically saved to Sequence playground via GraphQL API.
-    """
+    """Generate a financial automation map."""
     try:
-        generator = get_generator()
-
-        # Convert profile to dict for llm_generator
         profile = {
             "USER_TYPE": request.profile.USER_TYPE,
             "ANNUALINCOME": request.profile.ANNUALINCOME,
@@ -326,24 +312,12 @@ async def generate_map(request: GenerateRequest):
         }
 
         # Generate map using LLM
-        result = generator.generate(
-            prompt=request.prompt,
-            profile=profile
-        )
-
-        if result["error"]:
-            raise HTTPException(
-                status_code=500,
-                detail=result["error"]
-            )
-
-        map_data = result["json_map"]
+        map_data = generate_map_with_llm(request.prompt, profile)
 
         # Generate explanation
-        explanation = generate_explanation(map_data, profile, request.prompt)
+        explanation = generate_explanation(map_data, profile)
 
         # Create playground map via Sequence API
-        # This returns the real playground ID that works with playground.getsequence.io
         playground_id = await create_playground_map(
             map_data=map_data,
             name=f"Map Generator: {request.prompt[:50]}..."
@@ -358,10 +332,7 @@ async def generate_map(request: GenerateRequest):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Generation failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
 
 
 # ============================================================================
@@ -370,13 +341,6 @@ async def generate_map(request: GenerateRequest):
 
 if __name__ == "__main__":
     import uvicorn
-
     port = int(os.environ.get("PORT", 8000))
-
     print(f"Starting server on port {port}...")
-    uvicorn.run(
-        "server:app",
-        host="0.0.0.0",
-        port=port,
-        reload=True
-    )
+    uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
