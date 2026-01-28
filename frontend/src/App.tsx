@@ -1,4 +1,3 @@
-import React from 'react';
 import { MapGenerator } from './components/MapGenerator';
 
 function App() {
